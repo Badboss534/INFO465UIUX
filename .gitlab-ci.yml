@@ -1,13 +1,39 @@
-# Use a Node.js Docker image so npm and node are available
-image: node:20
+# Use a Node image so npm and node are available
+image: node:18
 
-# Define pipeline stages
+# Define the stages of the pipeline
 stages:
   - test
+  - scan
 
-# Job that runs unit tests
+# -------------------------
+# JOB 1: Run Jest unit tests
+# -------------------------
 test_job:
   stage: test
   script:
+    # Install project dependencies
     - npm install
+    # Run Jest tests
     - npm test
+
+# --------------------------------
+# JOB 2: JSHint static code scan
+# --------------------------------
+jshint_scan:
+  stage: scan
+  script:
+    # Install JSHint
+    - npm install -g jshint
+    # Run JSHint and output results to a report file
+    - jshint validatePalindrome.js > jshint-report.txt || true
+  artifacts:
+    # Save the JSHint report so it can be downloaded
+    paths:
+      - jshint-report.txt
+
+# -----------------------------------------
+# JOB 3: Secret Detection security scan
+# -----------------------------------------
+include:
+  - template: Security/Secret-Detection.gitlab-ci.yml
