@@ -1,0 +1,15 @@
+{
+  "name": "git-mean-median",
+  "version": "1.0.0",
+  "main": "meanMedian.js",
+ "scripts": {
+  "test": "jest"
+},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "jest": "^30.2.0"
+  }
+}
