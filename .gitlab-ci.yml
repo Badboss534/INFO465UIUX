@@ -1,8 +1,11 @@
+# Use a Node.js Docker image so npm and node are available
 image: node:20
 
+# Define pipeline stages
 stages:
   - test
 
+# Job that runs unit tests
 test_job:
   stage: test
   script:
