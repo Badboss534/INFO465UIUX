@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Instructor Portal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+    <a href="index.html">Home</a>
+    <a href="search.html">Course Search</a>
+    <a href="registration.html">Student Registration</a>
+    <a href="instructor.html">Instructor Schedule</a>
+</nav>
+
+<div class="container">
+    <h2>Instructor Portal</h2>
+    
+    <div id="loginArea">
+        <label>Instructor ID:</label>
+        <input type="text" id="iid" placeholder="e.g. PROF101">
+        <button onclick="login()">Login</button>
+    </div>
+
+    <div id="scheduleArea" style="display:none;">
+        <h3 id="welcomeMsg"></h3>
+        <h4>Your Assigned Teaching Schedule:</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Course</th>
+                    <th>Time</th>
+                    <th>Room</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>CS101 - Intro to Programming</td>
+                    <td>MWF 10:00 AM</td>
+                    <td>Lab 302</td>
+                    <td><button onclick="viewRoster('CS101')">View Roster</button></td>
+                </tr>
+                <tr>
+                    <td>MATH301 - Calculus III</td>
+                    <td>TTh 01:30 PM</td>
+                    <td>Hall B</td>
+                    <td><button onclick="viewRoster('MATH301')">View Roster</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function login() {
+        const id = document.getElementById('iid').value;
+        if(id) {
+            document.getElementById('loginArea').style.display = 'none';
+            document.getElementById('scheduleArea').style.display = 'block';
+            document.getElementById('welcomeMsg').innerText = "Teaching Schedule for: " + id;
+        }
+    }
+
+    function viewRoster(courseId) {
+        // Simple navigation to the next screen with a "fake" parameter
+        window.location.href = "session.html?course=" + courseId;
+    }
+</script>
+</body>
+</html>

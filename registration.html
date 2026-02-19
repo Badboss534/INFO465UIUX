@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Registration</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+    <a href="index.html">Home</a>
+    <a href="search.html">Course Search</a>
+    <a href="registration.html">Student Registration</a>
+    <a href="instructor.html">Instructor Schedule</a>
+</nav>
+
+<div class="container">
+    <h2>Student Registration Portal</h2>
+    
+    <div id="loginArea">
+        <label>Student ID:</label>
+        <input type="text" id="sid" placeholder="e.g. S123">
+        <button onclick="login()">Login</button>
+    </div>
+
+    <div id="registrationArea" style="display:none;">
+        <h3 id="welcomeMsg"></h3>
+        
+        <h4>Your Enrolled Sessions:</h4>
+        <ul id="myClasses">
+            <li>No classes yet.</li>
+        </ul>
+
+        <hr>
+        <h4>Register for New Session:</h4>
+        <select id="courseSelect">
+            <option value="CS101">CS101 - Intro to Programming</option>
+            <option value="ENG202">ENG202 - Creative Writing</option>
+        </select>
+        <button onclick="enroll()">Enroll Now</button>
+        <p id="feedback" style="color:red;"></p>
+    </div>
+</div>
+
+<script>
+    let currentStudent = "";
+    let enrolled = [];
+
+    function login() {
+        currentStudent = document.getElementById('sid').value;
+        if(currentStudent) {
+            document.getElementById('loginArea').style.display = 'none';
+            document.getElementById('registrationArea').style.display = 'block';
+            document.getElementById('welcomeMsg').innerText = "Welcome, Student " + currentStudent;
+        }
+    }
+
+    function enroll() {
+        const choice = document.getElementById('courseSelect').value;
+        const feedback = document.getElementById('feedback');
+        
+        // Simple Validation: Prevent duplicate
+        if(enrolled.includes(choice)) {
+            feedback.innerText = "Error: You are already registered for " + choice;
+        } else {
+            enrolled.push(choice);
+            feedback.style.color = "green";
+            feedback.innerText = "Successfully enrolled in " + choice;
+            updateList();
+        }
+    }
+
+    function updateList() {
+        const list = document.getElementById('myClasses');
+        list.innerHTML = "";
+        enrolled.forEach(item => {
+            list.innerHTML += `<li>${item}</li>`;
+        });
+    }
+</script>
+</body>
+</html>

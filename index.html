@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Portal - Home</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+    <a href="index.html">Home</a>
+    <a href="search.html">Course Search</a>
+    <a href="registration.html">Student Registration</a>
+    <a href="instructor.html">Instructor Schedule</a>
+</nav>
+
+<div class="container">
+    <h1>Welcome to the Online Course Registration System</h1>
+    <p>Please select an option from the menu above or use the shortcuts below to get started.</p>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px;">
+        
+        <div style="border: 1px solid #ddd; padding: 20px; border-radius: 8px; text-align: center; background-color: #f9f9f9;">
+            <h3>Students</h3>
+            <p>Search for available classes, check prerequisites, and manage your semester enrollment.</p>
+            <button onclick="location.href='registration.html'">Go to Student Login</button>
+        </div>
+
+        <div style="border: 1px solid #ddd; padding: 20px; border-radius: 8px; text-align: center; background-color: #f9f9f9;">
+            <h3>Staff & Instructors</h3>
+            <p>Access your teaching schedule, view assigned classrooms, and manage student rosters.</p>
+            <button onclick="location.href='instructor.html'" style="background-color: #6c757d;">Go to Instructor Login</button>
+        </div>
+
+    </div>
+
+    <div style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px; text-align: center;">
+        <p>Looking for a specific class? <a href="search.html">Use Course Search</a></p>
+    </div>
+</div>
+
+</body>
+</html>

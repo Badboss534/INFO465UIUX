@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Session Roster</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+    <a href="index.html">Home</a>
+    <a href="search.html">Course Search</a>
+    <a href="registration.html">Student Registration</a>
+    <a href="instructor.html">Instructor Schedule</a>
+</nav>
+
+<div class="container">
+    <h2 id="rosterTitle">Session Roster</h2>
+    <p>Authorized personnel only.</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>Student Name</th>
+                <th>Major</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="rosterData">
+            <tr>
+                <td>S123</td>
+                <td>Alex Rivera</td>
+                <td>Computer Science</td>
+                <td>Enrolled</td>
+            </tr>
+            <tr>
+                <td>S456</td>
+                <td>Jamie Chen</td>
+                <td>Mathematics</td>
+                <td>Enrolled</td>
+            </tr>
+            <tr>
+                <td>S789</td>
+                <td>Taylor Smith</td>
+                <td>English</td>
+                <td>Enrolled</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <br>
+    <button onclick="history.back()">Back to Schedule</button>
+</div>
+
+<script>
+    // Logic to grab the course name from the URL to make it look "real"
+    const params = new URLSearchParams(window.location.search);
+    const course = params.get('course');
+    if(course) {
+        document.getElementById('rosterTitle').innerText = "Roster for " + course;
+    }
+</script>
+</body>
+</html>

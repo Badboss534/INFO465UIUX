@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Course Search</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+    <a href="index.html">Home</a>
+    <a href="search.html">Course Search</a>
+    <a href="registration.html">Student Registration</a>
+    <a href="instructor.html">Instructor Schedule</a>
+</nav>
+
+<div class="container">
+    <h2>Course Search</h2>
+    <p>Search by Department, Instructor, or Course Number.</p>
+    
+    <input type="text" id="searchInput" placeholder="Type to search...">
+    <button onclick="searchCourses()">Search</button>
+
+    <table id="courseTable">
+        <thead>
+            <tr>
+                <th>Course #</th>
+                <th>Dept</th>
+                <th>Instructor</th>
+                <th>Credits</th>
+                <th>Prereq</th>
+                <th>Modality</th>
+                <th>Max Enroll</th>
+            </tr>
+        </thead>
+        <tbody id="courseData">
+            </tbody>
+    </table>
+</div>
+
+<script>
+    const courses = [
+        { id: "CS101", dept: "Computer Science", prof: "Dr. Smith", credits: 3, prereq: "None", mode: "Online", max: 30 },
+        { id: "ENG202", dept: "English", prof: "Prof. Jones", credits: 3, prereq: "ENG101", mode: "In-Person", max: 25 },
+        { id: "MATH301", dept: "Mathematics", prof: "Dr. Lee", credits: 4, prereq: "MATH200", mode: "Hybrid", max: 20 }
+    ];
+
+    function displayCourses(data) {
+        const tbody = document.getElementById('courseData');
+        tbody.innerHTML = "";
+        data.forEach(c => {
+            tbody.innerHTML += `<tr>
+                <td>${c.id}</td>
+                <td>${c.dept}</td>
+                <td>${c.prof}</td>
+                <td>${c.credits}</td>
+                <td>${c.prereq}</td>
+                <td>${c.mode}</td>
+                <td>${c.max}</td>
+            </tr>`;
+        });
+    }
+
+    function searchCourses() {
+        const term = document.getElementById('searchInput').value.toLowerCase();
+        const filtered = courses.filter(c => 
+            c.id.toLowerCase().includes(term) || 
+            c.dept.toLowerCase().includes(term) || 
+            c.prof.toLowerCase().includes(term)
+        );
+        displayCourses(filtered);
+    }
+
+    // Initial load
+    displayCourses(courses);
+</script>
+</body>
+</html>
