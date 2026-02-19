@@ -1,63 +1,54 @@
 # INFO465UIUX
 UI UX Team assignment
 
-Project Overview
+Project Name: VCU Registration System UI/UX Draft
 
-A front-end prototype of an online course registration system that simulates student and instructor workflows such as course searching, registration, and session enrollment using HTML, CSS, and JavaScript.
+1. Team Member Contributions
 
-Team Member Contributions
+.....
 
+2. One-Line Summary of Each Screen
 
-..........
+Home Screen (home.html): Central navigation hub that allows users to access student and instructor features.
 
-Screen Summaries (One-Line Description)
+Course Search (course.html): Allows users to search for courses by department, instructor, or course ID.
 
-Home Screen (index.html): Central navigation hub providing role-based access for students and instructors.
+Student Registration (registration.html): Simulates student login and allows students to enroll in courses.
 
-Course Search Screen (search.html): Allows users to filter courses by department, instructor, or course ID.
+Instructor Schedule (instructor.html): Displays instructor teaching schedules and allows viewing of student rosters.
 
-Student Registration (registration.html): Simulates student login, class viewing, and session enrollment.
+Session Enrollment (session.html): Shows a list of students enrolled in a selected course session.
 
-Instructor Schedule (instructor.html): Displays assigned courses and student rosters for instructors.
+3. HTML/CSS/JavaScript Elements and Techniques Used
 
-Session Enrollment (session.html): Shows enrolled students for a selected course session.
+HTML:
 
-HTML, CSS, and JavaScript Techniques Used
-HTML5
+* Used semantic elements such as <nav>, <table>, and <section> for page structure.
+* Created multiple pages for navigation between system features.
 
-Semantic elements such as <nav>, <section>, and <table> for structured content.
+CSS:
 
-Organized page layouts for accessibility and readability.
+* Used a global stylesheet (style.css) for consistent layout and design.
+* Applied Flexbox and Grid for page layout.
+* Implemented consistent colors, buttons, and fonts.
 
-CSS3
+JavaScript:
 
-Global stylesheet (style.css) for consistent design across all pages.
+* Used DOM manipulation to update page content.
+* Used arrays to simulate data storage.
+* Implemented search filtering for courses.
+* Implemented validation logic to prevent duplicate registration.
+* Used conditional rendering to simulate login behavior.
 
-Flexbox and CSS Grid for layout structure and responsiveness.
+4. Design Challenges and Decisions
 
-Consistent color scheme, typography, and button styling.
+Consistency:
+A shared CSS file was used to ensure all pages had the same layout and design.
 
-JavaScript
+Usability:
+Navigation links and simple layouts were used to make the system easy to use.
 
-DOM manipulation to update page content dynamically.
-
-Arrays to simulate data storage.
-
-Search filtering functionality.
-
-Validation logic to prevent duplicate registrations.
-
-Conditional rendering for login simulation and content display.
-
-Design Challenges and Decisions
-Consistency
-
-A shared external CSS file was used to ensure uniform fonts, colors, and layouts across all pages built by different team members.
-
-Usability
-
-Quick Action cards were added to the home screen to reduce navigation steps and improve user experience.
-
-Validation Without Backend
+Validation Without Backend:
+Since no database was used, JavaScript arrays were used to track enrolled courses and simulate system functionality.
 
 Since no database was used, enrollment validation was implemented using JavaScript arrays to track enrolled courses within the browser session, effectively demonstrating system behavior.
