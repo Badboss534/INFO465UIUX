@@ -11,6 +11,12 @@ A prototype of an VCU registration system that have a student and instructor wor
 
 Tas Chowdhury - Made the website and worked on the code
 
+Omar Aziz
+
+Viana Coles
+
+Christian Taylor
+
 ## One-Line Summary of Each Screen
 
 Home Screen (home.html): Central navigation hub that allows users to access student and instructor features.
