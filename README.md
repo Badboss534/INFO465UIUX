@@ -9,7 +9,7 @@ A prototype of an VCU registration system that have a student and instructor wor
 
 ## Team Member Contributions
 
-.....
+Tas Chowdhury - Made the website and worked on the code
 
 ## One-Line Summary of Each Screen
 
