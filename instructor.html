@@ -8,8 +8,8 @@
 <body>
 
 <nav>
-    <a href="index.html">Home</a>
-    <a href="search.html">Course Search</a>
+    <a href="home.html">Home</a>
+    <a href="course.html">Course Search</a>
     <a href="registration.html">Student Registration</a>
     <a href="instructor.html">Instructor Schedule</a>
 </nav>
@@ -19,7 +19,7 @@
     
     <div id="loginArea">
         <label>Instructor ID:</label>
-        <input type="text" id="iid" placeholder="e.g. PROF101">
+        <input type="text" id="iid" placeholder="e.g. PROFRudravarjula">
         <button onclick="login()">Login</button>
     </div>
 
@@ -47,6 +47,12 @@
                     <td>TTh 01:30 PM</td>
                     <td>Hall B</td>
                     <td><button onclick="viewRoster('MATH301')">View Roster</button></td>
+                </tr>
+                <tr>
+                    <td>INFO465 - Projects in Information System</td>
+                    <td>T 06:00 PM</td>
+                    <td>Hall 400</td>
+                    <td><button onclick="viewRoster('INFO465')">View Roster</button></td>
                 </tr>
             </tbody>
         </table>
