@@ -1,13 +1,17 @@
 # INFO465UIUX
+
 UI UX Team assignment
 
-Project Name: VCU Registration System UI/UX Draft
+## Project Name: VCU Registration System UI/UX Draft
 
-1. Team Member Contributions
+## Project Overview
+A prototype of an VCU registration system that have a student and instructor workflows such as course searching, registration, and session enrollment using HTML, CSS, and JavaScript.
+
+## Team Member Contributions
 
 .....
 
-2. One-Line Summary of Each Screen
+## One-Line Summary of Each Screen
 
 Home Screen (home.html): Central navigation hub that allows users to access student and instructor features.
 
@@ -19,7 +23,7 @@ Instructor Schedule (instructor.html): Displays instructor teaching schedules an
 
 Session Enrollment (session.html): Shows a list of students enrolled in a selected course session.
 
-3. HTML/CSS/JavaScript Elements and Techniques Used
+## HTML/CSS/JavaScript Elements and Techniques Used
 
 HTML:
 
@@ -40,7 +44,7 @@ JavaScript:
 * Implemented validation logic to prevent duplicate registration.
 * Used conditional rendering to simulate login behavior.
 
-4. Design Challenges and Decisions
+## Design Challenges and Decisions
 
 Consistency:
 A shared CSS file was used to ensure all pages had the same layout and design.
