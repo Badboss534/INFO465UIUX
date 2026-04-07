@@ -1,4 +1,4 @@
-const validatePalindrome = require("./validatePalindrome");
+const validatePalindrome = require("../../../info350/git-mean-median/validatePalindrome");
 
 test("hello is NOT a palindrome", () => {
   expect(validatePalindrome("hello")).toBe(false);
