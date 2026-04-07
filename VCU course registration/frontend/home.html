@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VCU Course Registration Portal</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --gold: #C9A84C; --gold-dim: #7A6230; --gold-light: #E8C97A;
+      --black: #0D0D0D; --surface: #F7F4EF; --surface-2: #EDE9E1;
+      --text: #1A1A1A; --text-muted: #6B6459; --border: rgba(0,0,0,0.10);
+      --red-accent: #9B1B30;
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* ── banner ── */
+    .top-banner {
+      background: var(--black); padding: 0 2.5rem; height: 64px;
+      display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #222;
+    }
+    .logo-row { display: flex; align-items: center; gap: 14px; }
+    .logo-row img { height: 38px; filter: brightness(0) invert(1); }
+    .logo-row .wordmark { border-left: 1px solid #333; padding-left: 14px; }
+    .logo-row h1 { font-family: 'EB Garamond', serif; font-size: 17px; font-weight: 400; color: #fff; }
+    .logo-row p  { font-size: 11px; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 2px; }
+    .session-chip { font-size: 11px; padding: 4px 12px; border: 1px solid var(--gold-dim); border-radius: 999px; color: var(--gold); letter-spacing: 0.06em; }
+
+    /* ── nav ── */
+    nav { background: var(--black); border-bottom: 1px solid #1e1e1e; display: flex; padding: 0 2.5rem; }
+    nav a {
+      font-size: 13px; color: #999; text-decoration: none; padding: 12px 18px;
+      letter-spacing: 0.04em; border-bottom: 2px solid transparent; transition: color 0.15s;
+    }
+    nav a:hover { color: #fff; }
+    nav a.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+    /* ── hero ── */
+    .hero {
+      background: var(--black);
+      padding: 5rem 2.5rem 4.5rem;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 4rem;
+      align-items: center;
+      max-width: 100%;
+    }
+    .hero-left {}
+    .hero-eyebrow {
+      font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1rem;
+    }
+    .hero-title {
+      font-family: 'EB Garamond', serif; font-size: 52px; font-weight: 400;
+      color: #fff; line-height: 1.1; margin-bottom: 1.5rem;
+    }
+    .hero-title em { font-style: italic; color: var(--gold-light); }
+    .hero-desc { font-size: 15px; color: #999; line-height: 1.7; max-width: 520px; margin-bottom: 2rem; }
+    .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn-primary {
+      height: 46px; padding: 0 28px; background: var(--gold); color: var(--black);
+      border: none; border-radius: 3px; font-family: 'DM Sans', sans-serif;
+      font-size: 14px; font-weight: 500; cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px; letter-spacing: 0.04em;
+      transition: background 0.15s;
+    }
+    .btn-primary:hover { background: var(--gold-light); }
+    .btn-secondary {
+      height: 46px; padding: 0 28px; background: transparent; color: #fff;
+      border: 1px solid #444; border-radius: 3px; font-family: 'DM Sans', sans-serif;
+      font-size: 14px; cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px; transition: border-color 0.15s, color 0.15s;
+    }
+    .btn-secondary:hover { border-color: #888; color: #fff; }
+
+    /* ── hero right: stats ── */
+    .hero-stats {
+      background: #141414; border: 1px solid #222; border-radius: 4px; padding: 1.75rem;
+    }
+    .hero-stats-title { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #555; margin-bottom: 1.25rem; }
+    .stat-item { padding: 12px 0; border-bottom: 1px solid #222; display: flex; align-items: center; justify-content: space-between; }
+    .stat-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .stat-item .label { font-size: 13px; color: #777; }
+    .stat-item .value { font-size: 20px; font-weight: 500; color: #fff; }
+    .stat-item .value.gold { color: var(--gold); }
+
+    /* ── feature cards ── */
+    .features { max-width: 1100px; margin: 0 auto; padding: 4rem 1.5rem; flex: 1; }
+    .features-header { margin-bottom: 2.5rem; }
+    .features-header h2 { font-family: 'EB Garamond', serif; font-size: 28px; font-weight: 400; }
+    .features-header p  { font-size: 14px; color: var(--text-muted); margin-top: 6px; }
+    .divider-line { width: 40px; height: 1px; background: var(--gold); margin: 1rem 0; }
+
+    .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+    .feature-card {
+      background: #fff; border: 1px solid var(--border); border-radius: 4px;
+      padding: 1.5rem; transition: border-color 0.15s, box-shadow 0.15s;
+      display: flex; flex-direction: column;
+    }
+    .feature-card:hover { border-color: rgba(201,168,76,0.35); box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
+
+    .card-icon {
+      width: 36px; height: 36px; border-radius: 3px; margin-bottom: 1.1rem;
+      display: flex; align-items: center; justify-content: center; font-size: 16px;
+    }
+    .icon-gold   { background: rgba(201,168,76,0.12); }
+    .icon-blue   { background: #E6F1FB; }
+    .icon-green  { background: #EAF3DE; }
+
+    .card-num { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+    .card-title { font-size: 16px; font-weight: 500; margin-bottom: 10px; }
+    .card-desc  { font-size: 13px; color: var(--text-muted); line-height: 1.6; flex: 1; }
+    .card-link  {
+      margin-top: 1.25rem; font-size: 13px; font-weight: 500; color: var(--gold-dim);
+      text-decoration: none; display: inline-flex; align-items: center; gap: 5px;
+      border-bottom: 1px solid transparent; transition: border-color 0.15s;
+    }
+    .card-link:hover { border-bottom-color: var(--gold-dim); }
+
+    /* ── notice strip ── */
+    .notice-strip {
+      background: var(--surface-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      padding: 1rem 2.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    }
+    .notice-strip p { font-size: 13px; color: var(--text-muted); }
+    .notice-strip strong { color: var(--text); }
+    .notice-date {
+      font-size: 11px; font-weight: 500; background: var(--black); color: var(--gold);
+      padding: 3px 12px; border-radius: 2px; letter-spacing: 0.06em; white-space: nowrap;
+    }
+
+    /* ── quick links ── */
+    .quick-links { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+    .quick-links h3 { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px; }
+    .links-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .quick-link {
+      font-size: 13px; padding: 8px 18px; border: 1px solid var(--border); border-radius: 3px;
+      color: var(--text); text-decoration: none; background: #fff;
+      transition: border-color 0.15s, background 0.12s;
+    }
+    .quick-link:hover { border-color: var(--gold-dim); background: var(--surface); }
+
+    /* ── footer ── */
+    footer {
+      background: var(--black); padding: 1.5rem 2.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid #1e1e1e;
+    }
+    footer p { font-size: 12px; color: #555; }
+    footer .footer-links { display: flex; gap: 20px; }
+    footer .footer-links a { font-size: 12px; color: #555; text-decoration: none; transition: color 0.15s; }
+    footer .footer-links a:hover { color: #999; }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; padding: 3rem 1.5rem; }
+      .hero-stats { display: none; }
+      .cards-grid { grid-template-columns: 1fr; }
+      .top-banner, nav, footer { padding-left: 1rem; padding-right: 1rem; }
+      .notice-strip { padding: 1rem; flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-banner">
+  <div class="logo-row">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/VCU_Rams_logo.svg" alt="VCU" />
+    <div class="wordmark">
+      <h1>VCU Course Registration Portal</h1>
+      <p>Summer Session 2026</p>
+    </div>
+  </div>
+  <div class="session-chip">Summer 2026</div>
+</div>
+
+<nav>
+  <a href="home.html" class="active">Home</a>
+  <a href="course.html">Course Search</a>
+  <a href="login.html">Student Login</a>
+  <a href="instructor-login.html">Instructor Login</a>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Virginia Commonwealth University &nbsp;·&nbsp; Summer 2026</div>
+    <h2 class="hero-title">Course<br>Registration<br><em>Portal</em></h2>
+    <p class="hero-desc">
+      Browse available sessions, register for courses, manage your schedule,
+      and view instructor rosters — all in one place for the Summer 2026 term.
+    </p>
+    <div class="hero-btns">
+      <a href="course.html" class="btn-primary">Browse courses →</a>
+      <a href="login.html" class="btn-secondary">Student login</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stats-title">Session at a glance</div>
+    <div class="stat-item">
+      <span class="label">Term</span>
+      <span class="value gold">Summer 2026</span>
+    </div>
+    <div class="stat-item">
+      <span class="label">Courses available</span>
+      <span class="value" id="statCourses">—</span>
+    </div>
+    <div class="stat-item">
+      <span class="label">Open sections</span>
+      <span class="value" id="statSections">—</span>
+    </div>
+    <div class="stat-item">
+      <span class="label">Departments</span>
+      <span class="value" id="statDepts">—</span>
+    </div>
+    <div class="stat-item">
+      <span class="label">Registration closes</span>
+      <span class="value" style="font-size:15px;">May 15, 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- Notice strip -->
+<div class="notice-strip">
+  <p><strong>Registration is now open</strong> for the Summer 2026 session. Sign in with your student ID to add or drop courses.</p>
+  <span class="notice-date">Closes May 15, 2026</span>
+</div>
+
+<!-- Feature cards -->
+<div class="features">
+  <div class="features-header">
+    <h2>What you can do</h2>
+    <div class="divider-line"></div>
+    <p>Everything you need to manage your Summer 2026 enrollment.</p>
+  </div>
+
+  <div class="cards-grid">
+    <div class="feature-card">
+      <div class="card-icon icon-gold">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="8" cy="8" r="5.5" stroke="#7A6230" stroke-width="1.5"/><path d="M12.5 12.5L16 16" stroke="#7A6230" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="card-num">01</div>
+      <div class="card-title">Course Search</div>
+      <p class="card-desc">Search all available sessions by department, course number, instructor, or modality. Filter results and check live seat availability before registering.</p>
+      <a href="course.html" class="card-link">Search courses →</a>
+    </div>
+
+    <div class="feature-card">
+      <div class="card-icon icon-blue">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="3" width="14" height="12" rx="2" stroke="#0C447C" stroke-width="1.5"/><path d="M6 7h6M6 10h4" stroke="#0C447C" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="card-num">02</div>
+      <div class="card-title">Student Registration</div>
+      <p class="card-desc">Sign in with your VCU student ID to view your enrolled courses, add new sessions, or drop existing ones. Duplicate registrations are automatically prevented.</p>
+      <a href="login.html" class="card-link">Sign in →</a>
+    </div>
+
+    <div class="feature-card">
+      <div class="card-icon icon-green">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="6" r="3" stroke="#3B6D11" stroke-width="1.5"/><path d="M3 15c0-3.314 2.686-5 6-5s6 1.686 6 5" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="card-num">03</div>
+      <div class="card-title">Instructor Dashboard</div>
+      <p class="card-desc">Instructors sign in with their VCU email to view assigned sessions, check enrollment counts, and access the full student roster for each section.</p>
+      <a href="instructor-login.html" class="card-link">Instructor login →</a>
+    </div>
+  </div>
+</div>
+
+<!-- Quick links -->
+<div class="quick-links">
+  <h3>Quick access</h3>
+  <div class="links-row">
+    <a href="course.html" class="quick-link">Browse all courses</a>
+    <a href="login.html" class="quick-link">Student login</a>
+    <a href="registration.html" class="quick-link">My registration</a>
+    <a href="instructor-login.html" class="quick-link">Instructor login</a>
+    <a href="instructor.html" class="quick-link">Instructor dashboard</a>
+  </div>
+</div>
+
+<footer>
+  <p>&copy; 2026 Virginia Commonwealth University &nbsp;·&nbsp; Office of the University Registrar</p>
+  <div class="footer-links">
+    <a href="#">VCU.edu</a>
+    <a href="#">Registrar</a>
+    <a href="#">IT Help Desk</a>
+  </div>
+</footer>
+
+<script>
+  // Pull live stats from the backend to populate the hero panel
+  const API = 'http://localhost:3000';
+
+  async function loadStats() {
+    try {
+      const [sessRes, deptRes] = await Promise.all([
+        fetch(`${API}/sessions`),
+        fetch(`${API}/departments`)
+      ]);
+
+      if (sessRes.ok) {
+        const sessions = await sessRes.json();
+        const openSessions = sessions.filter(s => {
+          const max = s.maxCapacity || s.maxStudents || s.maximum || 0;
+          const enrolled = s.enrollments?.length || s.enrolledCount || s._count?.enrollments || 0;
+          return max === 0 || enrolled < max;
+        });
+        // Unique courses
+        const courseIds = new Set(sessions.map(s => s.courseId || s.course?.id));
+        document.getElementById('statCourses').textContent = courseIds.size;
+        document.getElementById('statSections').textContent = openSessions.length;
+      }
+
+      if (deptRes.ok) {
+        const depts = await deptRes.json();
+        document.getElementById('statDepts').textContent = depts.length;
+      }
+    } catch (e) {
+      // Stats are cosmetic — fail silently
+    }
+  }
+
+  loadStats();
+</script>
+</body>
+</html>

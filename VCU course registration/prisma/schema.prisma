@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Department {
+  id           Int          @id @default(autoincrement())
+  code         String       @unique
+  name         String
+  school       String?
+  courses      Course[]
+  instructors  Instructor[]
+}
+
+model Instructor {
+  id           Int        @id @default(autoincrement())
+  firstName    String
+  lastName     String
+  email        String     @unique
+  departmentId Int
+  department   Department @relation(fields: [departmentId], references: [id])
+  sessions     Session[]
+}
+
+model Course {
+  id            Int        @id @default(autoincrement())
+  courseCode    String     @unique
+  title         String
+  description   String
+  credits       Int
+  isReal        Boolean    @default(false)
+  prerequisites String[]
+  departmentId  Int
+  department    Department @relation(fields: [departmentId], references: [id])
+  sessions      Session[]
+}
+
+model Session {
+  id            Int          @id @default(autoincrement())
+  courseId      Int
+  instructorId  Int
+  semester      String
+  year          Int
+  sectionNumber String
+  modality      String?
+  meetingDays   String
+  startTime     String
+  endTime       String
+  location      String
+  maxCapacity   Int
+  course        Course       @relation(fields: [courseId], references: [id])
+  instructor    Instructor   @relation(fields: [instructorId], references: [id])
+  enrollments   Enrollment[]
+}
+
+model Student {
+  id              Int          @id @default(autoincrement())
+  firstName       String
+  lastName        String
+  email           String       @unique
+  studentNumber   String       @unique
+  homeCountry     String?
+  virginiaResident Boolean     @default(false)
+  enrollments     Enrollment[]
+}
+
+model Enrollment {
+  id          Int      @id @default(autoincrement())
+  studentId   Int
+  sessionId   Int
+  enrolledAt  DateTime @default(now())
+  status      String
+  student     Student  @relation(fields: [studentId], references: [id])
+  session     Session  @relation(fields: [sessionId], references: [id])
+
+  @@unique([studentId, sessionId])
+}

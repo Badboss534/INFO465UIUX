@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Course Details</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="top-banner">
+    <div class="logo-row">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/VCU_Rams_logo.svg"
+           alt="VCU Logo"
+           style="height:50px;">
+      <div>
+        <h1>VCU Course Details</h1>
+        <p>Detailed course and session information</p>
+      </div>
+    </div>
+  </div>
+
+  <nav>
+    <a href="home.html">Home</a>
+    <a href="course.html">Course Search</a>
+    <a href="login.html">Login</a>
+    <a href="registration.html">Student Registration</a>
+  </nav>
+
+  <section class="hero">
+    <div id="courseDetails">Loading...</div>
+  </section>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    async function registerForSession(sessionId) {
+      if (!user) {
+        alert('Please log in as a student before registering.');
+        window.location.href = 'login.html';
+        return;
+      }
+
+      if (user.role !== 'student') {
+        alert('Only students can register for courses.');
+        return;
+      }
+
+      try {
+        const res = await fetch('http://localhost:3000/enrollments', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            studentId: user.id,
+            sessionId: sessionId
+          })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          alert(data.error || 'Registration failed.');
+          return;
+        }
+
+        alert('Successfully registered for this session.');
+        loadCourseDetails();
+      } catch (error) {
+        console.error(error);
+        alert('Unable to connect to server.');
+      }
+    }
+
+    async function loadCourseDetails() {
+      const params = new URLSearchParams(window.location.search);
+      const courseId = params.get('id');
+      const details = document.getElementById('courseDetails');
+
+      if (!courseId) {
+        details.innerHTML = '<p>No course selected.</p>';
+        return;
+      }
+
+      try {
+        const res = await fetch(`http://localhost:3000/courses/${courseId}`);
+        const course = await res.json();
+
+        if (!res.ok) {
+          details.innerHTML = `<p>${course.error || 'Failed to load course details.'}</p>`;
+          return;
+        }
+
+        details.innerHTML = `
+          <h2>${course.courseCode} - ${course.title}</h2>
+          <p><strong>Department:</strong> ${course.department.name}</p>
+          <p><strong>Description:</strong> ${course.description}</p>
+          <p><strong>Credits:</strong> ${course.credits}</p>
+
+          <h3 style="margin-top:25px;">Available Sessions</h3>
+
+          ${course.sessions.length ? course.sessions.map(session => `
+            <div style="border:1px solid #ddd; padding:15px; margin-top:15px; border-radius:8px;">
+              <p><strong>Section:</strong> ${session.sectionNumber}</p>
+              <p><strong>Instructor:</strong> ${session.instructor.firstName} ${session.instructor.lastName}</p>
+              <p><strong>Semester:</strong> ${session.semester} ${session.year}</p>
+              <p><strong>Meeting:</strong> ${session.meetingDays} | ${session.startTime} - ${session.endTime}</p>
+              <p><strong>Location:</strong> ${session.location}</p>
+              <p><strong>Seats Remaining:</strong> ${session.remainingSeats}</p>
+
+              ${
+                session.remainingSeats > 0
+                  ? `<button class="main-btn" onclick="registerForSession(${session.id})">Register</button>`
+                  : `<button class="secondary-btn" disabled>Class Full</button>`
+              }
+            </div>
+          `).join('') : '<p>No sessions available.</p>'}
+        `;
+      } catch (error) {
+        console.error(error);
+        details.innerHTML = '<p>Unable to connect to server.</p>';
+      }
+    }
+
+    loadCourseDetails();
+  </script>
+</body>
+</html>

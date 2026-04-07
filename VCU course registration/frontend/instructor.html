@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VCU Instructor Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --gold: #C9A84C; --gold-dim: #7A6230; --gold-light: #E8C97A;
+      --black: #0D0D0D; --surface: #F7F4EF; --surface-2: #EDE9E1;
+      --text: #1A1A1A; --text-muted: #6B6459; --border: rgba(0,0,0,0.10);
+      --red-accent: #9B1B30;
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--text); min-height: 100vh; }
+
+    .top-banner {
+      background: var(--black); padding: 0 2.5rem; height: 64px;
+      display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #222;
+    }
+    .logo-row { display: flex; align-items: center; gap: 14px; }
+    .logo-row img { height: 38px; filter: brightness(0) invert(1); }
+    .logo-row .wordmark { border-left: 1px solid #333; padding-left: 14px; }
+    .logo-row h1 { font-family: 'EB Garamond', serif; font-size: 17px; font-weight: 400; color: #fff; }
+    .logo-row p  { font-size: 11px; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 2px; }
+    .banner-right { display: flex; align-items: center; gap: 14px; }
+    .instructor-chip { font-size: 12px; color: #999; }
+    .instructor-chip strong { color: #fff; }
+    .logout-btn {
+      font-size: 12px; padding: 5px 14px; border: 1px solid #333; border-radius: 2px;
+      color: #999; background: transparent; cursor: pointer; font-family: 'DM Sans', sans-serif;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .logout-btn:hover { border-color: #555; color: #fff; }
+
+    nav { background: var(--black); border-bottom: 1px solid #1e1e1e; display: flex; padding: 0 2.5rem; }
+    nav a {
+      font-size: 13px; color: #999; text-decoration: none; padding: 12px 18px;
+      letter-spacing: 0.04em; border-bottom: 2px solid transparent; transition: color 0.15s;
+    }
+    nav a:hover { color: #fff; }
+    nav a.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+    .page { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+
+    .welcome-strip {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 2rem; gap: 1rem;
+    }
+    .welcome-strip h2 { font-family: 'EB Garamond', serif; font-size: 30px; font-weight: 400; }
+    .welcome-strip p  { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+
+    .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 2rem; }
+    .stat-card { background: #fff; border: 1px solid var(--border); border-radius: 4px; padding: 1rem 1.25rem; }
+    .stat-label { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+    .stat-value { font-size: 26px; font-weight: 500; color: var(--text); }
+    .stat-sub   { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+    .section-label { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; }
+
+    .sessions-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; margin-bottom: 2.5rem; }
+
+    .session-card {
+      background: #fff; border: 1px solid var(--border); border-radius: 4px;
+      padding: 1.25rem; transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .session-card:hover { border-color: rgba(201,168,76,0.4); box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+
+    .card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; }
+    .card-course-num  { font-size: 11px; font-weight: 500; color: var(--gold-dim); letter-spacing: 0.06em; }
+    .card-course-name { font-size: 15px; font-weight: 500; margin-top: 2px; line-height: 1.25; }
+    .card-section     { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+
+    .card-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0; }
+    .card-field label { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 2px; }
+    .card-field span  { font-size: 13px; color: var(--text); }
+
+    .enrollment-bar-wrap { margin: 12px 0 14px; }
+    .enrollment-bar-wrap .bar-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 5px; }
+    .enroll-bar  { width: 100%; height: 5px; background: var(--surface-2); border-radius: 3px; }
+    .enroll-fill { height: 100%; border-radius: 3px; background: var(--gold); transition: width 0.4s; }
+    .enroll-fill.high { background: #639922; }
+    .enroll-fill.full { background: var(--red-accent); }
+
+    .roster-btn {
+      width: 100%; height: 36px; background: var(--black); color: #fff; border: none;
+      border-radius: 3px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+      cursor: pointer; transition: background 0.15s; letter-spacing: 0.04em;
+    }
+    .roster-btn:hover { background: #1f1f1f; }
+    .roster-btn.loading { opacity: 0.7; cursor: default; }
+
+    .meta-pill { font-size: 11px; padding: 2px 9px; border-radius: 2px; font-weight: 500; }
+    .pill-online   { background: #EAF3DE; color: #3B6D11; }
+    .pill-inperson { background: #E6F1FB; color: #0C447C; }
+    .pill-hybrid   { background: #FAEEDA; color: #633806; }
+    .pill-async    { background: #F1EFE8; color: #5F5E5A; }
+
+    .empty-state { padding: 3rem; text-align: center; color: var(--text-muted); font-size: 14px; }
+
+    .modal-bg {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.45); z-index: 100;
+      align-items: center; justify-content: center; padding: 1rem;
+    }
+    .modal-bg.open { display: flex; }
+    .modal {
+      background: #fff; border-radius: 4px; border: 1px solid var(--border);
+      width: 100%; max-width: 660px; max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+    }
+    .modal-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      padding: 1.5rem 1.5rem 1rem; border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; background: #fff; z-index: 1;
+    }
+    .modal-header h3 { font-family: 'EB Garamond', serif; font-size: 22px; font-weight: 400; }
+    .modal-header .sub { font-size: 13px; color: var(--text-muted); margin-top: 3px; }
+    .modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text-muted); padding: 0 0 0 12px; flex-shrink: 0; }
+    .modal-body { padding: 1.25rem 1.5rem; }
+
+    .roster-meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1.25rem; }
+    .roster-meta-item label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 3px; }
+    .roster-meta-item span  { font-size: 13px; font-weight: 500; }
+
+    .roster-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .roster-table thead th {
+      padding: 8px 12px; font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-muted); text-align: left;
+      border-bottom: 1px solid var(--border); background: var(--surface-2);
+    }
+    .roster-table tbody tr { border-bottom: 1px solid var(--border); }
+    .roster-table tbody tr:last-child { border-bottom: none; }
+    .roster-table tbody tr:hover { background: var(--surface); }
+    .roster-table tbody td { padding: 10px 12px; }
+    .student-id-cell { font-size: 12px; color: var(--text-muted); font-family: monospace; }
+    .va-badge { font-size: 10px; padding: 1px 6px; border-radius: 2px; background: #E6F1FB; color: #0C447C; }
+
+    .skeleton { background: linear-gradient(90deg,var(--surface-2) 25%,#e8e4dc 50%,var(--surface-2) 75%); background-size:200% 100%; animation:shimmer 1.2s infinite; border-radius:3px; height:14px; }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+    footer { text-align: center; padding: 1.5rem; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 3rem; }
+
+    @media (max-width: 680px) {
+      .stat-grid { grid-template-columns: 1fr 1fr; }
+      .top-banner, nav { padding: 0 1rem; }
+      .page { padding: 1.5rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-banner">
+  <div class="logo-row">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/VCU_Rams_logo.svg" alt="VCU" />
+    <div class="wordmark">
+      <h1>VCU Course Registration Portal</h1>
+      <p>Instructor Dashboard</p>
+    </div>
+  </div>
+  <div class="banner-right">
+    <span class="instructor-chip">Signed in as <strong id="instructorNameDisplay">—</strong></span>
+    <button class="logout-btn" onclick="logout()">Sign out</button>
+  </div>
+</div>
+
+<nav>
+  <a href="home.html">Home</a>
+  <a href="course.html">Course Search</a>
+  <a href="instructor.html" class="active">Instructor Dashboard</a>
+</nav>
+
+<div class="page">
+  <div class="welcome-strip">
+    <div>
+      <h2 id="welcomeText">Instructor Dashboard</h2>
+      <p id="deptText"></p>
+    </div>
+    <div style="font-size:12px;color:var(--text-muted);padding-top:6px;">Summer 2026</div>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-label">Sessions teaching</div>
+      <div class="stat-value" id="statSessions">—</div>
+      <div class="stat-sub">this summer</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total students</div>
+      <div class="stat-value" id="statStudents">—</div>
+      <div class="stat-sub">across all sections</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Sections full</div>
+      <div class="stat-value" id="statFull">—</div>
+      <div class="stat-sub">at capacity</div>
+    </div>
+  </div>
+
+  <div class="section-label">Your assigned sessions</div>
+  <div class="sessions-grid" id="sessionsGrid">
+    <div style="grid-column:1/-1;" class="empty-state">
+      <div class="skeleton" style="width:200px;margin:0 auto 8px;"></div>
+      <div class="skeleton" style="width:140px;margin:0 auto;height:11px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Roster modal -->
+<div class="modal-bg" id="rosterModal" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <h3 id="rosterTitle">Student Roster</h3>
+        <div class="sub" id="rosterSub"></div>
+      </div>
+      <button class="modal-close" onclick="document.getElementById('rosterModal').classList.remove('open')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="roster-meta" id="rosterMeta"></div>
+      <div id="rosterContent"></div>
+    </div>
+  </div>
+</div>
+
+<footer>&copy; 2026 Virginia Commonwealth University &nbsp;·&nbsp; Office of the University Registrar</footer>
+
+<script>
+  const API = 'http://localhost:3000';
+  let user = null;
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const stored = localStorage.getItem('user');
+    if (!stored) { window.location.href = 'login.html'; return; }
+    user = JSON.parse(stored);
+    if (user.role !== 'instructor') { window.location.href = 'login.html'; return; }
+
+    document.getElementById('instructorNameDisplay').textContent =
+      (user.firstName || '') + ' ' + (user.lastName || '');
+    document.getElementById('welcomeText').textContent =
+      'Welcome, ' + (user.firstName || 'Instructor');
+    document.getElementById('deptText').textContent =
+      'Department: ' + (user.department || user.dept || '—') +
+      '  ·  ID: ' + (user.instructorId || user.id || '—');
+
+    loadSessions();
+  });
+
+  async function loadSessions() {
+    const grid = document.getElementById('sessionsGrid');
+    try {
+      const id = user.instructorId || user.id;
+      const res = await fetch(`${API}/instructors/${id}/sessions`);
+      if (!res.ok) throw new Error();
+      const sessions = await res.json();
+
+      const totalStudents = sessions.reduce((s, x) => s + (x.enrolledCount || x._count?.enrollments || 0), 0);
+      const fullCount = sessions.filter(x => {
+        const e = x.enrolledCount || x._count?.enrollments || 0;
+        const m = x.maxStudents || x.maxCapacity || x.maximum || 0;
+        return m > 0 && e >= m;
+      }).length;
+
+      document.getElementById('statSessions').textContent = sessions.length;
+      document.getElementById('statStudents').textContent = totalStudents;
+      document.getElementById('statFull').textContent = fullCount;
+
+      if (!sessions.length) {
+        grid.innerHTML = '<div style="grid-column:1/-1;" class="empty-state">No sessions assigned for Summer 2026.</div>';
+        return;
+      }
+
+      grid.innerHTML = sessions.map(s => {
+        const courseNum  = s.course?.courseNumber || s.course?.courseCode || s.courseCode || '—';
+        const courseName = s.course?.courseName   || s.course?.title      || s.title      || '—';
+        const section    = s.sectionNumber || s.section || '001';
+        const modality   = s.modality || '—';
+        const maxCap     = s.maxStudents || s.maxCapacity || s.maximum || 0;
+        const enrolled   = s.enrolledCount || s._count?.enrollments || 0;
+        const pct        = maxCap > 0 ? Math.min(100, Math.round(enrolled / maxCap * 100)) : 0;
+        const fillClass  = pct >= 100 ? 'full' : pct >= 75 ? 'high' : '';
+        const sessionId  = s.id || s.sessionId;
+        const modalityMap = { 'Online':'pill-online','In-person':'pill-inperson','Hybrid':'pill-hybrid','Asynchronous':'pill-async' };
+        const pill = `<span class="meta-pill ${modalityMap[modality]||'pill-async'}">${modality}</span>`;
+
+        return `
+        <div class="session-card">
+          <div class="card-top">
+            <div>
+              <div class="card-course-num">${courseNum}</div>
+              <div class="card-course-name">${courseName}</div>
+              <div class="card-section">Section §${section}</div>
+            </div>
+            ${pill}
+          </div>
+          <div class="card-fields">
+            <div class="card-field"><label>Credits</label><span>${s.course?.creditHours || s.credits || '—'} cr</span></div>
+            <div class="card-field"><label>Prereq</label><span style="font-size:12px;">${(s.course?.prerequisites || s.prerequisites || []).join(', ') || 'None'}</span></div>
+            <div class="card-field"><label>Meeting days</label><span style="font-size:12px;">${s.meetingDays || '—'}</span></div>
+            <div class="card-field"><label>Time</label><span style="font-size:12px;">${s.startTime && s.endTime ? s.startTime + ' – ' + s.endTime : '—'}</span></div>
+            <div class="card-field"><label>Location</label><span style="font-size:12px;">${s.location || '—'}</span></div>
+            <div class="card-field"><label>REAL</label><span>${s.course?.realDesignation === 'y' || s.realDesignation === 'y' ? 'Yes' : 'No'}</span></div>
+          </div>
+          <div class="enrollment-bar-wrap">
+            <div class="bar-label"><span>Enrollment</span><span>${enrolled} / ${maxCap} students</span></div>
+            <div class="enroll-bar"><div class="enroll-fill ${fillClass}" style="width:${pct}%"></div></div>
+          </div>
+          <button class="roster-btn" id="rbtn-${sessionId}" onclick="viewRoster('${sessionId}')">
+            View Student Roster
+          </button>
+        </div>`;
+      }).join('');
+
+    } catch (e) {
+      console.error(e);
+      grid.innerHTML = '<div style="grid-column:1/-1;" class="empty-state" style="color:#9B1B30;">Could not load sessions. Check server connection.</div>';
+    }
+  }
+
+  async function viewRoster(sessionId) {
+    const btn = document.getElementById('rbtn-' + sessionId);
+    if (btn) { btn.classList.add('loading'); btn.textContent = 'Loading…'; }
+
+    document.getElementById('rosterTitle').textContent = 'Student Roster';
+    document.getElementById('rosterSub').textContent = '';
+    document.getElementById('rosterMeta').innerHTML = '';
+    document.getElementById('rosterContent').innerHTML =
+      '<div class="skeleton" style="width:100%;margin-bottom:8px;"></div><div class="skeleton" style="width:80%;"></div>';
+    document.getElementById('rosterModal').classList.add('open');
+
+    try {
+      const res = await fetch(`${API}/sessions/${sessionId}/roster`);
+      const data = await res.json();
+
+      if (!res.ok) {
+        document.getElementById('rosterContent').innerHTML =
+          `<div class="empty-state" style="color:#9B1B30;">${data.error || 'Failed to load roster.'}</div>`;
+        return;
+      }
+
+      const courseNum  = data.course?.courseNumber || data.course?.courseCode || '—';
+      const courseName = data.course?.courseName   || data.course?.title      || '—';
+      const section    = data.sectionNumber || data.section || '001';
+      const maxCap     = data.maxStudents || data.maxCapacity || 0;
+      const students   = data.students || [];
+
+      document.getElementById('rosterTitle').textContent = courseNum + ' — ' + courseName;
+      document.getElementById('rosterSub').textContent   = 'Section §' + section + '  ·  Summer 2026';
+      document.getElementById('rosterMeta').innerHTML = `
+        <div class="roster-meta-item"><label>Enrolled</label><span>${students.length} / ${maxCap}</span></div>
+        <div class="roster-meta-item"><label>Modality</label><span>${data.modality || '—'}</span></div>
+        <div class="roster-meta-item"><label>Instructor</label><span>${data.instructor ? data.instructor.firstName + ' ' + data.instructor.lastName : '—'}</span></div>
+      `;
+
+      if (!students.length) {
+        document.getElementById('rosterContent').innerHTML =
+          '<div class="empty-state">No students enrolled in this section yet.</div>';
+        return;
+      }
+
+      document.getElementById('rosterContent').innerHTML = `
+        <table class="roster-table">
+          <thead>
+            <tr>
+              <th>#</th><th>Student ID</th><th>Name</th><th>Country</th><th>VA Resident</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${students.map((s, i) => `
+              <tr>
+                <td style="color:var(--text-muted);font-size:12px;">${i + 1}</td>
+                <td class="student-id-cell">${s.studentNumber || s.studentId || s.id || '—'}</td>
+                <td>${s.firstName} ${s.lastName}</td>
+                <td style="font-size:12px;color:var(--text-muted);">${s.homeCountry || '—'}</td>
+                <td>${s.virginiaResident === true || s.virginiaResident === 'y'
+                  ? '<span class="va-badge">VA</span>'
+                  : '<span style="font-size:12px;color:var(--text-muted);">No</span>'}</td>
+              </tr>`).join('')}
+          </tbody>
+        </table>`;
+
+    } catch (e) {
+      document.getElementById('rosterContent').innerHTML =
+        '<div class="empty-state" style="color:#9B1B30;">Unable to connect to server.</div>';
+    } finally {
+      if (btn) { btn.classList.remove('loading'); btn.textContent = 'View Student Roster'; }
+    }
+  }
+
+  function closeModal(e) {
+    if (e.target === document.getElementById('rosterModal'))
+      document.getElementById('rosterModal').classList.remove('open');
+  }
+
+  function logout() {
+    localStorage.removeItem('user');
+    window.location.href = 'login.html';
+  }
+</script>
+</body>
+</html>

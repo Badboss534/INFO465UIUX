@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VCU Course Search</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --gold: #C9A84C; --gold-dim: #7A6230; --gold-light: #E8C97A;
+      --black: #0D0D0D; --surface: #F7F4EF; --surface-2: #EDE9E1;
+      --text: #1A1A1A; --text-muted: #6B6459; --border: rgba(0,0,0,0.10);
+      --red-accent: #9B1B30;
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--text); min-height: 100vh; }
+
+    .top-banner {
+      background: var(--black); padding: 0 2.5rem; height: 64px;
+      display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #222;
+    }
+    .logo-row { display: flex; align-items: center; gap: 14px; }
+    .logo-row img { height: 38px; filter: brightness(0) invert(1); }
+    .logo-row .wordmark { border-left: 1px solid #333; padding-left: 14px; }
+    .logo-row h1 { font-family: 'EB Garamond', serif; font-size: 17px; font-weight: 400; color: #fff; }
+    .logo-row p  { font-size: 11px; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 2px; }
+    .banner-right { display: flex; align-items: center; gap: 14px; }
+    .student-chip { font-size: 12px; color: #999; }
+    .student-chip strong { color: #fff; }
+    .login-hint { font-size: 12px; color: var(--gold); border: 1px solid var(--gold-dim); padding: 4px 12px; border-radius: 999px; text-decoration: none; }
+    nav { background: var(--black); border-bottom: 1px solid #1e1e1e; display: flex; padding: 0 2.5rem; }
+    nav a {
+      font-size: 13px; color: #999; text-decoration: none; padding: 12px 18px;
+      letter-spacing: 0.04em; border-bottom: 2px solid transparent; transition: color 0.15s;
+    }
+    nav a:hover { color: #fff; }
+    nav a.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+    .page { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+    .page-header { margin-bottom: 2rem; }
+    .page-header h2 { font-family: 'EB Garamond', serif; font-size: 30px; font-weight: 400; }
+    .page-header p  { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+
+    .search-bar {
+      display: grid; grid-template-columns: 1fr 200px 200px auto auto; gap: 10px; margin-bottom: 1.5rem;
+    }
+    .search-bar input, .search-bar select {
+      height: 40px; padding: 0 14px; border: 1px solid #DDD; border-radius: 3px;
+      font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--text);
+      background: #fff; outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .search-bar input:focus, .search-bar select:focus {
+      border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,168,76,0.12);
+    }
+    .search-bar input::placeholder { color: #BBB; }
+    .search-btn, .reset-btn {
+      height: 40px; padding: 0 18px; border: none; border-radius: 3px;
+      font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+      cursor: pointer; white-space: nowrap; transition: background 0.15s;
+    }
+    .search-btn { background: var(--black); color: #fff; }
+    .search-btn:hover { background: #1f1f1f; }
+    .reset-btn { background: var(--surface-2); color: var(--text-muted); border: 1px solid var(--border); }
+    .reset-btn:hover { background: #ddd9d0; }
+
+    .stats-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .result-count { font-size: 13px; color: var(--text-muted); }
+    .enrolled-summary { font-size: 13px; color: var(--text-muted); }
+    .enrolled-summary strong { color: var(--text); }
+
+    .table-card { background: #fff; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+    .empty-state { padding: 3rem; text-align: center; color: var(--text-muted); font-size: 14px; }
+
+    table { width: 100%; border-collapse: collapse; }
+    thead { background: var(--surface-2); }
+    thead th {
+      padding: 10px 16px; font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-muted); text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--surface); }
+    tbody td { padding: 12px 16px; font-size: 14px; vertical-align: middle; }
+
+    .course-num { font-weight: 500; white-space: nowrap; }
+    .course-name-cell { max-width: 220px; }
+    .course-name-cell .name { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .course-name-cell .sub  { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+    .meta-pill { font-size: 11px; padding: 2px 9px; border-radius: 2px; font-weight: 500; white-space: nowrap; }
+    .pill-online   { background: #EAF3DE; color: #3B6D11; }
+    .pill-inperson { background: #E6F1FB; color: #0C447C; }
+    .pill-hybrid   { background: #FAEEDA; color: #633806; }
+    .pill-async    { background: #F1EFE8; color: #5F5E5A; }
+    .pill-real     { background: #FDF3F4; color: var(--red-accent); border: 1px solid #F5C1C5; }
+
+    .seats-wrap { display: flex; align-items: center; gap: 8px; }
+    .seats-bar  { width: 52px; height: 4px; background: var(--surface-2); border-radius: 2px; }
+    .seats-fill { height: 100%; border-radius: 2px; background: var(--gold); }
+    .seats-fill.full { background: var(--red-accent); }
+    .seats-text { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+
+    .action-cell { display: flex; align-items: center; gap: 6px; }
+    .add-btn {
+      font-size: 12px; padding: 5px 14px; font-family: 'DM Sans', sans-serif;
+      border: 1px solid #C0DD97; border-radius: 2px; cursor: pointer;
+      color: #3B6D11; background: #EAF3DE; transition: background 0.12s; white-space: nowrap;
+    }
+    .add-btn:hover { background: #C0DD97; }
+    .add-btn:disabled { opacity: 0.5; cursor: default; }
+    .drop-btn {
+      font-size: 12px; padding: 5px 14px; font-family: 'DM Sans', sans-serif;
+      border: 1px solid #F5C1C5; border-radius: 2px; cursor: pointer;
+      color: var(--red-accent); background: #FDF3F4; transition: background 0.12s; white-space: nowrap;
+    }
+    .drop-btn:hover { background: #F7C1C1; }
+    .drop-btn:disabled { opacity: 0.5; cursor: default; }
+    .detail-btn {
+      font-size: 12px; padding: 5px 10px; font-family: 'DM Sans', sans-serif;
+      border: 1px solid var(--border); border-radius: 2px; cursor: pointer;
+      color: var(--text-muted); background: transparent; transition: background 0.12s; white-space: nowrap;
+    }
+    .detail-btn:hover { background: var(--surface-2); }
+
+    .status-tag { font-size: 11px; padding: 4px 10px; border-radius: 2px; white-space: nowrap; }
+    .status-enrolled { background: #E6F1FB; color: #0C447C; }
+    .status-full     { background: var(--surface-2); color: var(--text-muted); }
+    .status-dup      { background: #FAEEDA; color: #633806; }
+    .status-guest    { background: var(--surface-2); color: var(--text-muted); font-size: 11px; font-style: italic; }
+
+    .alert {
+      display: none; padding: 11px 16px; border-radius: 3px; font-size: 13px;
+      margin-bottom: 14px; border: 1px solid transparent;
+    }
+    .alert.show { display: flex; align-items: center; gap: 10px; }
+    .alert-success { background: #EAF3DE; color: #3B6D11; border-color: #C0DD97; }
+    .alert-error   { background: #FDF3F4; color: var(--red-accent); border-color: #F5C1C5; }
+    .alert-close   { margin-left: auto; cursor: pointer; font-size: 16px; opacity: 0.6; }
+    .alert-close:hover { opacity: 1; }
+
+    .modal-bg {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.45); z-index: 100;
+      align-items: center; justify-content: center; padding: 1rem;
+    }
+    .modal-bg.open { display: flex; }
+    .modal {
+      background: #fff; border-radius: 4px; border: 1px solid var(--border);
+      width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+    }
+    .modal-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      padding: 1.5rem 1.5rem 1rem; border-bottom: 1px solid var(--border);
+    }
+    .modal-header h3 { font-family: 'EB Garamond', serif; font-size: 22px; font-weight: 400; }
+    .modal-header .sub { font-size: 13px; color: var(--text-muted); margin-top: 3px; }
+    .modal-close {
+      background: none; border: none; font-size: 22px; cursor: pointer;
+      color: var(--text-muted); line-height: 1; padding: 0 0 0 12px; flex-shrink: 0;
+    }
+    .modal-body { padding: 1.25rem 1.5rem; }
+    .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 1rem; }
+    .modal-field label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 3px; }
+    .modal-field span  { font-size: 14px; color: var(--text); font-weight: 500; }
+    .modal-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
+
+    .skeleton {
+      background: linear-gradient(90deg, var(--surface-2) 25%, #e8e4dc 50%, var(--surface-2) 75%);
+      background-size: 200% 100%; animation: shimmer 1.2s infinite; border-radius: 3px; height: 14px;
+    }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    .skeleton-row td { padding: 16px; }
+
+    footer { text-align: center; padding: 1.5rem; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 3rem; }
+
+    @media (max-width: 860px) {
+      .search-bar { grid-template-columns: 1fr 1fr; }
+      .search-bar input { grid-column: 1 / -1; }
+      .top-banner, nav { padding: 0 1rem; }
+      thead th:nth-child(4), thead th:nth-child(5), tbody td:nth-child(4), tbody td:nth-child(5) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-banner">
+  <div class="logo-row">
+    <img src="https://tse2.mm.bing.net/th/id/OIP.oNyCv-z0NXfS47SvTMPR8gHaCd?rs=1&pid=ImgDetMain&o=7&rm=3" alt="VCU" />
+    <div class="wordmark">
+      <h1>VCU Course Registration Portal</h1>
+      <p>Summer Session 2026</p>
+    </div>
+  </div>
+  <div class="banner-right" id="bannerRight">
+    <a href="login.html" class="login-hint">Sign in to register</a>
+  </div>
+</div>
+
+<nav>
+  <a href="home.html">Home</a>
+  <a href="course.html" class="active">Course Search</a>
+  <a href="registration.html">My Registration</a>
+  <a href="instructor.html">Instructor Portal</a>
+</nav>
+
+<div class="page">
+  <div class="page-header">
+    <h2>Course Search — Summer 2026</h2>
+    <p>Browse all available sections. Sign in to add or drop courses.</p>
+  </div>
+
+  <div id="mainAlert" class="alert"></div>
+
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search by course number, title, or instructor…"
+      onkeydown="if(event.key==='Enter') searchCourses()" />
+    <select id="deptFilter" onchange="searchCourses()">
+      <option value="">All departments</option>
+    </select>
+    <select id="modalityFilter" onchange="searchCourses()">
+      <option value="">All modalities</option>
+      <option value="Online">Online</option>
+      <option value="In-person">In-person</option>
+      <option value="Hybrid">Hybrid</option>
+      <option value="Asynchronous">Asynchronous</option>
+    </select>
+    <button class="search-btn" onclick="searchCourses()">Search</button>
+    <button class="reset-btn" onclick="resetSearch()">Reset</button>
+  </div>
+
+  <div class="stats-row">
+    <span class="result-count" id="resultCount"></span>
+    <span class="enrolled-summary" id="enrolledSummary"></span>
+  </div>
+
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Course</th>
+          <th>Title / Instructor</th>
+          <th>Modality</th>
+          <th>Credits</th>
+          <th>Seats</th>
+          <th>Prereq</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="courseData">
+        <tr class="skeleton-row">
+          <td><div class="skeleton" style="width:60px"></div></td>
+          <td><div class="skeleton" style="width:160px;margin-bottom:6px"></div><div class="skeleton" style="width:100px;height:11px"></div></td>
+          <td><div class="skeleton" style="width:70px"></div></td>
+          <td><div class="skeleton" style="width:30px"></div></td>
+          <td><div class="skeleton" style="width:80px"></div></td>
+          <td><div class="skeleton" style="width:60px"></div></td>
+          <td><div class="skeleton" style="width:90px"></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Detail modal -->
+<div class="modal-bg" id="detailModal" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <h3 id="modalTitle">Course Details</h3>
+        <div class="sub" id="modalSub"></div>
+      </div>
+      <button class="modal-close" onclick="document.getElementById('detailModal').classList.remove('open')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-grid" id="modalGrid"></div>
+      <div id="modalPrereq"></div>
+      <div id="modalRoster" style="margin-top:1.25rem;"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="detail-btn" onclick="document.getElementById('detailModal').classList.remove('open')">Close</button>
+      <span id="modalActionBtn"></span>
+    </div>
+  </div>
+</div>
+
+<footer>&copy; 2026 Virginia Commonwealth University &nbsp;·&nbsp; Office of the University Registrar</footer>
+
+<script>
+  const API = 'http://localhost:3000';
+  let allSessions = [];
+  let displayedSessions = [];
+  let currentUser = null;
+  let enrolledSessions = [];
+
+  window.addEventListener('DOMContentLoaded', async () => {
+    const stored = localStorage.getItem('user');
+    if (stored) {
+      currentUser = JSON.parse(stored);
+      if (currentUser.role !== 'instructor') {
+        document.getElementById('bannerRight').innerHTML =
+          `<span class="student-chip">Signed in as <strong>${currentUser.firstName || currentUser.studentId || ''}</strong></span>`;
+        await loadEnrolled();
+      } else {
+        document.getElementById('bannerRight').innerHTML =
+          `<span class="student-chip">Instructor: <strong>${currentUser.firstName} ${currentUser.lastName}</strong></span>`;
+      }
+    }
+    await loadDepts();
+    await loadAllSessions();
+  });
+
+  async function loadEnrolled() {
+    try {
+      const id = currentUser.studentId || currentUser.id;
+      const res = await fetch(`${API}/students/${id}/enrollments`);
+      if (res.ok) enrolledSessions = await res.json();
+      updateEnrolledSummary();
+    } catch (e) { console.warn('Could not load enrollments:', e); }
+  }
+
+  function updateEnrolledSummary() {
+    const credits = enrolledSessions.reduce((s, e) => s + (e.course?.creditHours || e.creditHours || 0), 0);
+    const el = document.getElementById('enrolledSummary');
+    if (currentUser && currentUser.role !== 'instructor') {
+      el.innerHTML = `Enrolled in <strong>${enrolledSessions.length}</strong> session(s) &nbsp;·&nbsp; <strong>${credits}</strong> credits`;
+    }
+  }
+
+  async function loadDepts() {
+    try {
+      const res = await fetch(`${API}/departments`);
+      if (!res.ok) return;
+      const depts = await res.json();
+      const sel = document.getElementById('deptFilter');
+      depts.forEach(d => {
+        const o = document.createElement('option');
+        o.value = d.departmentId || d.id;
+        o.textContent = (d.departmentId || d.id) + ' — ' + (d.departmentName || d.name);
+        sel.appendChild(o);
+      });
+    } catch (e) { console.warn('Depts:', e); }
+  }
+
+  async function loadAllSessions() {
+    try {
+      const res = await fetch(`${API}/sessions`);
+      if (!res.ok) throw new Error();
+      allSessions = await res.json();
+      displayedSessions = allSessions;
+      renderTable(allSessions);
+    } catch (e) {
+      document.getElementById('courseData').innerHTML =
+        '<tr><td colspan="7" style="padding:3rem;text-align:center;color:#9B1B30;">Could not load courses. Check server connection.</td></tr>';
+    }
+  }
+
+  function searchCourses() {
+    const q        = document.getElementById('searchInput').value.trim().toLowerCase();
+    const dept     = document.getElementById('deptFilter').value.toLowerCase();
+    const modality = document.getElementById('modalityFilter').value.toLowerCase();
+
+    displayedSessions = allSessions.filter(s => {
+      const courseNum  = (s.course?.courseNumber || s.courseNumber || s.course || '').toLowerCase();
+      const courseName = (s.course?.courseName   || s.courseName   || s.name  || '').toLowerCase();
+      const deptVal    = (s.course?.department?.departmentId || s.departmentId || '').toLowerCase();
+      const instructor = s.instructor
+        ? (s.instructor.firstName + ' ' + s.instructor.lastName).toLowerCase()
+        : (s.instructorName || '').toLowerCase();
+      const mod = (s.modality || '').toLowerCase();
+
+      const matchQ    = !q || courseNum.includes(q) || courseName.includes(q) || instructor.includes(q);
+      const matchDept = !dept || deptVal.includes(dept) || courseNum.startsWith(dept);
+      const matchMod  = !modality || mod === modality;
+      return matchQ && matchDept && matchMod;
+    });
+
+    renderTable(displayedSessions);
+  }
+
+  function resetSearch() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('deptFilter').value = '';
+    document.getElementById('modalityFilter').value = '';
+    displayedSessions = allSessions;
+    renderTable(allSessions);
+  }
+
+  function renderTable(sessions) {
+    const tbody = document.getElementById('courseData');
+    document.getElementById('resultCount').textContent =
+      sessions.length + ' section' + (sessions.length !== 1 ? 's' : '') + ' found';
+
+    if (!sessions.length) {
+      tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state">No sections match your search.</div></td></tr>';
+      return;
+    }
+
+    const enrolledIds     = new Set(enrolledSessions.map(s => s.id || s.sessionId));
+    const enrolledCourses = new Set(enrolledSessions.map(s => s.course?.courseNumber || s.courseNumber || s.course));
+
+    tbody.innerHTML = sessions.map(s => {
+      const sessionId     = s.id || s.sessionId;
+      const courseNum     = s.course?.courseNumber || s.courseNumber || s.course || '—';
+      const courseName    = s.course?.courseName   || s.courseName   || s.name  || '—';
+      const section       = s.sectionNumber || s.section || '001';
+      const instructor    = s.instructor
+        ? (s.instructor.firstName + ' ' + s.instructor.lastName)
+        : (s.instructorName || 'TBD');
+      const modality      = s.modality || '—';
+      const credits       = s.course?.creditHours || s.creditHours || 0;
+      const isReal        = s.course?.realDesignation === 'y' || s.realDesignation === 'y';
+      const prereq        = (s.course?.prerequisites || s.prerequisites || []).join(', ') || 'None';
+      const maxStudents   = s.maxStudents || s.maximum || 0;
+      const enrolledCount = s.enrolledCount || s._count?.enrollments || 0;
+      const isFull        = maxStudents > 0 && enrolledCount >= maxStudents;
+      const isEnrolled    = enrolledIds.has(sessionId);
+      const isDuplicate   = !isEnrolled && enrolledCourses.has(courseNum);
+      const seatPct       = maxStudents > 0 ? Math.min(100, Math.round(enrolledCount / maxStudents * 100)) : 0;
+
+      let actionHtml;
+      if (!currentUser || currentUser.role === 'instructor') {
+        actionHtml = `<span class="status-tag status-guest">Sign in to register</span>`;
+      } else if (isEnrolled) {
+        actionHtml = `
+          <span class="status-tag status-enrolled">Enrolled</span>
+          <button class="drop-btn" id="drop-${sessionId}" onclick="dropCourse('${sessionId}')">Drop</button>`;
+      } else if (isFull) {
+        actionHtml = `<span class="status-tag status-full">Section full</span>`;
+      } else if (isDuplicate) {
+        actionHtml = `<span class="status-tag status-dup">Duplicate</span>`;
+      } else {
+        actionHtml = `<button class="add-btn" id="add-${sessionId}" onclick="addCourse('${sessionId}')">Add</button>`;
+      }
+
+      return `
+      <tr id="row-${sessionId}">
+        <td class="course-num">${courseNum}<br><span style="font-size:11px;color:var(--text-muted);font-weight:400;">§${section}</span></td>
+        <td class="course-name-cell">
+          <div class="name">${courseName}</div>
+          <div class="sub">${instructor}</div>
+        </td>
+        <td>${modalityPill(modality)} ${isReal ? '<span class="meta-pill pill-real">REAL</span>' : ''}</td>
+        <td style="font-size:13px;">${credits} cr</td>
+        <td>
+          <div class="seats-wrap">
+            <div class="seats-bar"><div class="seats-fill${isFull ? ' full' : ''}" style="width:${seatPct}%"></div></div>
+            <span class="seats-text">${enrolledCount}/${maxStudents}</span>
+          </div>
+        </td>
+        <td style="font-size:12px;color:var(--text-muted);">${prereq}</td>
+        <td>
+          <div class="action-cell">
+            ${actionHtml}
+            <button class="detail-btn" onclick="openDetail('${sessionId}')">Details</button>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+
+    updateEnrolledSummary();
+  }
+
+  async function addCourse(sessionId) {
+    const btn = document.getElementById('add-' + sessionId);
+    if (btn) { btn.disabled = true; btn.textContent = '…'; }
+    clearAlert();
+    try {
+      const studentId = currentUser.studentId || currentUser.id;
+      const res = await fetch(`${API}/enrollments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ studentId, sessionId })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        showAlert(data.error || 'Could not add course.', 'error');
+        if (btn) { btn.disabled = false; btn.textContent = 'Add'; }
+        return;
+      }
+      enrolledSessions.push(data.enrollment || data);
+      const s = allSessions.find(x => (x.id || x.sessionId) === sessionId);
+      if (s) s.enrolledCount = (s.enrolledCount || 0) + 1;
+      renderTable(displayedSessions);
+      showAlert((data.enrollment?.course?.courseNumber || sessionId) + ' added to your schedule.', 'success');
+    } catch (e) {
+      showAlert('Unable to connect to server.', 'error');
+      if (btn) { btn.disabled = false; btn.textContent = 'Add'; }
+    }
+  }
+
+  async function dropCourse(sessionId) {
+    const btn = document.getElementById('drop-' + sessionId);
+    if (btn) { btn.disabled = true; btn.textContent = '…'; }
+    clearAlert();
+    try {
+      const studentId = currentUser.studentId || currentUser.id;
+      const res = await fetch(`${API}/enrollments`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ studentId, sessionId })
+      });
+      if (!res.ok) { const d = await res.json(); throw new Error(d.error || 'Drop failed'); }
+      enrolledSessions = enrolledSessions.filter(s => (s.id || s.sessionId) !== sessionId);
+      const s = allSessions.find(x => (x.id || x.sessionId) === sessionId);
+      if (s) s.enrolledCount = Math.max(0, (s.enrolledCount || 1) - 1);
+      renderTable(displayedSessions);
+      showAlert('Course dropped successfully.', 'success');
+    } catch (e) {
+      showAlert(e.message || 'Could not drop course.', 'error');
+      if (btn) { btn.disabled = false; btn.textContent = 'Drop'; }
+    }
+  }
+
+  function openDetail(sessionId) {
+    const s = allSessions.find(x => (x.id || x.sessionId) === sessionId);
+    if (!s) return;
+
+    const courseNum     = s.course?.courseNumber || s.courseNumber || s.course || '—';
+    const courseName    = s.course?.courseName   || s.courseName   || s.name  || '—';
+    const section       = s.sectionNumber || s.section || '001';
+    const instructor    = s.instructor ? (s.instructor.firstName + ' ' + s.instructor.lastName) : (s.instructorName || 'TBD');
+    const dept          = s.course?.department?.departmentName || s.departmentName || '—';
+    const credits       = s.course?.creditHours || s.creditHours || 0;
+    const modality      = s.modality || '—';
+    const maxStudents   = s.maxStudents || s.maximum || 0;
+    const enrolledCount = s.enrolledCount || s._count?.enrollments || 0;
+    const isReal        = s.course?.realDesignation === 'y' || s.realDesignation === 'y';
+    const prereq        = (s.course?.prerequisites || s.prerequisites || []).join(', ') || 'None';
+    const isFull        = maxStudents > 0 && enrolledCount >= maxStudents;
+
+    document.getElementById('modalTitle').textContent = courseNum + ' — ' + courseName;
+    document.getElementById('modalSub').textContent   = 'Section ' + section + '  ·  Summer 2026';
+
+    document.getElementById('modalGrid').innerHTML = `
+      <div class="modal-field"><label>Department</label><span>${dept}</span></div>
+      <div class="modal-field"><label>Credits</label><span>${credits}</span></div>
+      <div class="modal-field"><label>Instructor</label><span>${instructor}</span></div>
+      <div class="modal-field"><label>Modality</label><span>${modalityPill(modality)}</span></div>
+      <div class="modal-field"><label>Enrollment</label><span>${enrolledCount} / ${maxStudents}${isFull ? ' <span style="color:var(--red-accent);font-size:11px;">(Full)</span>' : ''}</span></div>
+      <div class="modal-field"><label>REAL Designation</label><span>${isReal ? '<span class="meta-pill pill-real">Yes</span>' : 'No'}</span></div>
+    `;
+    document.getElementById('modalPrereq').innerHTML =
+      `<div class="modal-field"><label>Prerequisites</label><span style="font-size:14px;font-weight:500;">${prereq}</span></div>`;
+
+    const enrolledIds     = new Set(enrolledSessions.map(x => x.id || x.sessionId));
+    const enrolledCourses = new Set(enrolledSessions.map(x => x.course?.courseNumber || x.courseNumber || x.course));
+    const isEnrolled  = enrolledIds.has(sessionId);
+    const isDuplicate = !isEnrolled && enrolledCourses.has(courseNum);
+
+    let modalAction = '';
+    if (!currentUser || currentUser.role === 'instructor') {
+      modalAction = `<a href="login.html" style="font-size:13px;color:var(--gold-dim);">Sign in to register</a>`;
+    } else if (isEnrolled) {
+      modalAction = `<button class="drop-btn" onclick="dropCourse('${sessionId}');document.getElementById('detailModal').classList.remove('open')">Drop this section</button>`;
+    } else if (isFull) {
+      modalAction = `<span class="status-tag status-full">Section full</span>`;
+    } else if (isDuplicate) {
+      modalAction = `<span class="status-tag status-dup">Already in another section of this course</span>`;
+    } else {
+      modalAction = `<button class="add-btn" style="padding:7px 20px;" onclick="addCourse('${sessionId}');document.getElementById('detailModal').classList.remove('open')">Add to schedule</button>`;
+    }
+    document.getElementById('modalActionBtn').innerHTML = modalAction;
+    document.getElementById('detailModal').classList.add('open');
+  }
+
+  function closeModal(e) {
+    if (e.target === document.getElementById('detailModal'))
+      document.getElementById('detailModal').classList.remove('open');
+  }
+
+  function modalityPill(m) {
+    const map = { 'Online':'pill-online','In-person':'pill-inperson','Hybrid':'pill-hybrid','Asynchronous':'pill-async' };
+    return `<span class="meta-pill ${map[m]||'pill-async'}">${m}</span>`;
+  }
+
+  function showAlert(msg, type) {
+    const el = document.getElementById('mainAlert');
+    el.className = `alert show alert-${type}`;
+    el.innerHTML = msg + '<span class="alert-close" onclick="this.parentElement.classList.remove(\'show\')">×</span>';
+    setTimeout(() => el.classList.remove('show'), 5000);
+  }
+
+  function clearAlert() {
+    document.getElementById('mainAlert').classList.remove('show');
+  }
+</script>
+</body>
+</html>

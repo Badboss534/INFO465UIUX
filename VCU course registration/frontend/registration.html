@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VCU Course Registration</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --gold: #C9A84C; --gold-dim: #7A6230; --black: #0D0D0D;
+      --surface: #F7F4EF; --surface-2: #EDE9E1; --text: #1A1A1A;
+      --text-muted: #6B6459; --border: rgba(0,0,0,0.10); --red-accent: #9B1B30;
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--text); min-height: 100vh; }
+
+    .top-banner {
+      background: var(--black); padding: 0 2.5rem; height: 64px;
+      display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #222;
+    }
+    .logo-row { display: flex; align-items: center; gap: 14px; }
+    .logo-row img { height: 38px; filter: brightness(0) invert(1); }
+    .logo-row .wordmark { border-left: 1px solid #333; padding-left: 14px; }
+    .logo-row h1 { font-family: 'EB Garamond', serif; font-size: 17px; font-weight: 400; color: #fff; }
+    .logo-row p { font-size: 11px; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 2px; }
+    .banner-right { display: flex; align-items: center; gap: 14px; }
+    .student-chip { font-size: 12px; color: #999; }
+    .student-chip strong { color: #fff; }
+    .logout-btn {
+      font-size: 12px; padding: 5px 14px; border: 1px solid #333; border-radius: 2px;
+      color: #999; background: transparent; cursor: pointer; font-family: 'DM Sans', sans-serif;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .logout-btn:hover { border-color: #555; color: #fff; }
+
+    nav { background: var(--black); border-bottom: 1px solid #1e1e1e; display: flex; padding: 0 2.5rem; }
+    nav a {
+      font-size: 13px; color: #999; text-decoration: none; padding: 12px 18px;
+      letter-spacing: 0.04em; border-bottom: 2px solid transparent; transition: color 0.15s;
+    }
+    nav a:hover { color: #fff; }
+    nav a.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+    .page { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+    .page-header { margin-bottom: 2rem; }
+    .page-header h2 { font-family: 'EB Garamond', serif; font-size: 30px; font-weight: 400; }
+    .page-header p { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+
+    .tab-bar { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.75rem; }
+    .tab-btn {
+      font-size: 14px; font-family: 'DM Sans', sans-serif; padding: 10px 22px;
+      background: transparent; border: none; border-bottom: 2px solid transparent;
+      color: var(--text-muted); cursor: pointer; margin-bottom: -1px; transition: color 0.15s;
+    }
+    .tab-btn.active { color: var(--text); border-bottom-color: var(--gold); font-weight: 500; }
+
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .section-title { font-size: 15px; font-weight: 500; }
+    .credit-badge { font-size: 12px; padding: 3px 12px; background: var(--black); color: var(--gold); border-radius: 2px; letter-spacing: 0.06em; }
+
+    .card { background: #fff; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+    .empty-state { padding: 3rem; text-align: center; color: var(--text-muted); font-size: 14px; }
+
+    .course-row {
+      display: flex; align-items: center; gap: 14px; padding: 14px 18px;
+      border-bottom: 1px solid var(--border); transition: background 0.1s;
+    }
+    .course-row:last-child { border-bottom: none; }
+    .course-row:hover { background: var(--surface); }
+
+    .course-tag {
+      width: 60px; font-size: 11px; font-weight: 500; text-align: center;
+      background: var(--surface-2); color: var(--gold-dim); padding: 4px 8px;
+      border-radius: 2px; flex-shrink: 0; letter-spacing: 0.05em;
+    }
+    .course-info { flex: 1; min-width: 0; }
+    .course-name { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .course-meta { font-size: 12px; color: var(--text-muted); margin-top: 3px; display: flex; flex-wrap: wrap; gap: 10px; }
+
+    .meta-pill { font-size: 11px; padding: 2px 9px; border-radius: 2px; font-weight: 500; }
+    .pill-online   { background: #EAF3DE; color: #3B6D11; }
+    .pill-inperson { background: #E6F1FB; color: #0C447C; }
+    .pill-hybrid   { background: #FAEEDA; color: #633806; }
+    .pill-async    { background: #F1EFE8; color: #5F5E5A; }
+    .pill-real     { background: #FDF3F4; color: var(--red-accent); border: 1px solid #F5C1C5; }
+
+    .drop-btn {
+      font-size: 13px; padding: 6px 16px; font-family: 'DM Sans', sans-serif;
+      background: transparent; border: 1px solid #DDD; border-radius: 2px; cursor: pointer;
+      color: var(--text-muted); transition: background 0.12s, border-color 0.12s, color 0.12s; flex-shrink: 0;
+    }
+    .drop-btn:hover { background: #FDF3F4; border-color: #F5C1C5; color: var(--red-accent); }
+
+    .search-bar { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; margin-bottom: 1.25rem; }
+    .search-bar input, .search-bar select {
+      height: 40px; padding: 0 14px; border: 1px solid #DDD; border-radius: 3px;
+      font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--text);
+      background: #fff; outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .search-bar input:focus, .search-bar select:focus {
+      border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,168,76,0.12);
+    }
+    .search-bar input::placeholder { color: #BBB; }
+    .search-btn {
+      height: 40px; padding: 0 20px; background: var(--black); color: #fff; border: none;
+      border-radius: 3px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+      cursor: pointer; white-space: nowrap; transition: background 0.15s;
+    }
+    .search-btn:hover { background: #1f1f1f; }
+
+    .add-btn {
+      font-size: 13px; padding: 6px 16px; font-family: 'DM Sans', sans-serif;
+      border: 1px solid #C0DD97; border-radius: 2px; cursor: pointer;
+      color: #3B6D11; background: #EAF3DE; transition: background 0.12s; flex-shrink: 0;
+    }
+    .add-btn:hover { background: #C0DD97; }
+    .add-btn:disabled { opacity: 0.5; cursor: default; }
+
+    .status-tag { font-size: 12px; padding: 5px 12px; border-radius: 2px; white-space: nowrap; flex-shrink: 0; }
+    .status-enrolled { background: #E6F1FB; color: #0C447C; }
+    .status-full     { background: var(--surface-2); color: var(--text-muted); }
+    .status-dup      { background: #FAEEDA; color: #633806; }
+
+    .seats-bar { width: 60px; height: 4px; background: var(--surface-2); border-radius: 2px; flex-shrink: 0; }
+    .seats-fill { height: 100%; border-radius: 2px; background: var(--gold); }
+    .seats-fill.full { background: var(--red-accent); }
+
+    .alert {
+      display: none; padding: 11px 16px; border-radius: 3px; font-size: 13px;
+      margin-bottom: 14px; border: 1px solid transparent;
+    }
+    .alert.show { display: flex; align-items: center; gap: 10px; }
+    .alert-success { background: #EAF3DE; color: #3B6D11; border-color: #C0DD97; }
+    .alert-error   { background: #FDF3F4; color: var(--red-accent); border-color: #F5C1C5; }
+    .alert-close   { margin-left: auto; cursor: pointer; font-size: 16px; opacity: 0.6; }
+    .alert-close:hover { opacity: 1; }
+
+    .skeleton {
+      background: linear-gradient(90deg, var(--surface-2) 25%, #e8e4dc 50%, var(--surface-2) 75%);
+      background-size: 200% 100%; animation: shimmer 1.2s infinite; border-radius: 3px; height: 14px;
+    }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+    @media (max-width: 680px) {
+      .search-bar { grid-template-columns: 1fr; }
+      .top-banner, nav { padding: 0 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-banner">
+  <div class="logo-row">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/VCU_Rams_logo.svg" alt="VCU" />
+    <div class="wordmark">
+      <h1>VCU Course Registration Portal</h1>
+      <p>Summer Session 2026</p>
+    </div>
+  </div>
+  <div class="banner-right">
+    <span class="student-chip">Signed in as <strong id="studentNameDisplay">—</strong></span>
+    <button class="logout-btn" onclick="logout()">Sign out</button>
+  </div>
+</div>
+
+<nav>
+  <a href="home.html">Home</a>
+  <a href="course.html">Course Search</a>
+  <a href="registration.html" class="active">My Registration</a>
+</nav>
+
+<div class="page">
+  <div class="page-header">
+    <h2 id="welcomeText">My Registration</h2>
+    <p id="studentInfo"></p>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('enrolled', this)">My Courses</button>
+    <button class="tab-btn" onclick="switchTab('search', this)">Add a Course</button>
+  </div>
+
+  <div id="tab-enrolled">
+    <div id="enrollAlert" class="alert"></div>
+    <div class="section-header">
+      <span class="section-title">Enrolled Sessions — Summer 2026</span>
+      <span class="credit-badge" id="creditTotal">0 credits</span>
+    </div>
+    <div class="card" id="enrolledContainer">
+      <div class="empty-state">Loading your courses…</div>
+    </div>
+  </div>
+
+  <div id="tab-search" style="display:none;">
+    <div id="addAlert" class="alert"></div>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Course number, name, or instructor…" />
+      <select id="deptFilter"><option value="">All departments</option></select>
+      <button class="search-btn" onclick="searchCourses()">Search</button>
+    </div>
+    <div class="card" id="searchContainer">
+      <div class="empty-state">Search for courses above to see available sections.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const API = 'http://localhost:3000';
+  let currentUser = null;
+  let enrolledSessions = [];
+  let searchResults = [];
+
+  window.addEventListener('DOMContentLoaded', async () => {
+    const stored = localStorage.getItem('user');
+    if (!stored) { window.location.href = 'login.html'; return; }
+    currentUser = JSON.parse(stored);
+
+    document.getElementById('studentNameDisplay').textContent =
+      (currentUser.firstName || '') + ' ' + (currentUser.lastName || currentUser.studentId || '');
+    document.getElementById('welcomeText').textContent =
+      'Welcome, ' + (currentUser.firstName || 'Student');
+    document.getElementById('studentInfo').textContent =
+      'Student ID: ' + (currentUser.studentId || currentUser.id) +
+      (currentUser.homeCountry ? '  ·  ' + currentUser.homeCountry : '') +
+      (currentUser.virginiaResident === true ? '  ·  Virginia Resident' : '');
+
+    await loadEnrolled();
+    await loadDepts();
+  });
+
+  function switchTab(tab, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-enrolled').style.display = tab === 'enrolled' ? 'block' : 'none';
+    document.getElementById('tab-search').style.display   = tab === 'search'   ? 'block' : 'none';
+    clearAlerts();
+  }
+
+  async function loadEnrolled() {
+    const container = document.getElementById('enrolledContainer');
+    container.innerHTML = '<div class="empty-state"><div class="skeleton" style="width:60%;margin:0 auto 8px;"></div><div class="skeleton" style="width:40%;margin:0 auto;"></div></div>';
+    try {
+      const studentId = currentUser.studentId || currentUser.id;
+      const res = await fetch(`${API}/students/${studentId}/enrollments`);
+      if (!res.ok) throw new Error('Failed to load');
+      enrolledSessions = await res.json();
+      renderEnrolled();
+    } catch (err) {
+      console.error(err);
+      container.innerHTML = '<div class="empty-state" style="color:#9B1B30;">Could not load enrollments. Check server connection.</div>';
+    }
+  }
+
+  function renderEnrolled() {
+    const container = document.getElementById('enrolledContainer');
+    const credits = enrolledSessions.reduce((sum, s) => sum + (s.course?.creditHours || s.creditHours || 0), 0);
+    document.getElementById('creditTotal').textContent = credits + ' credit' + (credits !== 1 ? 's' : '');
+
+    if (!enrolledSessions.length) {
+      container.innerHTML = '<div class="empty-state">You are not enrolled in any courses.<br>Use the <strong>Add a Course</strong> tab to register.</div>';
+      return;
+    }
+
+    container.innerHTML = enrolledSessions.map(s => {
+      const courseNum  = s.course?.courseNumber || s.courseNumber || s.course || '—';
+      const courseName = s.course?.courseName   || s.courseName   || s.name  || '—';
+      const section    = s.sectionNumber || s.section || '001';
+      const instructor = s.instructor
+        ? (s.instructor.firstName + ' ' + s.instructor.lastName)
+        : (s.instructorName || '—');
+      const modality   = s.modality || '—';
+      const credits    = s.course?.creditHours || s.creditHours || 0;
+      const isReal     = s.course?.realDesignation === 'y' || s.realDesignation === 'y';
+      const sessionId  = s.id || s.sessionId;
+      return `
+      <div class="course-row" id="row-${sessionId}">
+        <div class="course-tag">${courseNum}</div>
+        <div class="course-info">
+          <div class="course-name">${courseName} &mdash; §${section}</div>
+          <div class="course-meta">
+            <span>${instructor}</span><span>${credits} cr</span>
+            ${modalityPill(modality)}
+            ${isReal ? '<span class="meta-pill pill-real">REAL</span>' : ''}
+          </div>
+        </div>
+        <button class="drop-btn" onclick="dropCourse('${sessionId}')">Drop</button>
+      </div>`;
+    }).join('');
+  }
+
+  async function dropCourse(sessionId) {
+    const studentId = currentUser.studentId || currentUser.id;
+    const btn = document.querySelector(`#row-${sessionId} .drop-btn`);
+    if (btn) { btn.disabled = true; btn.textContent = '…'; }
+    try {
+      const res = await fetch(`${API}/enrollments`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ studentId, sessionId })
+      });
+      if (!res.ok) { const d = await res.json(); throw new Error(d.error || 'Drop failed'); }
+      enrolledSessions = enrolledSessions.filter(s => (s.id || s.sessionId) !== sessionId);
+      renderEnrolled();
+      showAlert('enrollAlert', 'Course dropped successfully.', 'success');
+      if (document.getElementById('tab-search').style.display !== 'none') renderSearchResults();
+    } catch (err) {
+      showAlert('enrollAlert', err.message || 'Could not drop course.', 'error');
+      if (btn) { btn.disabled = false; btn.textContent = 'Drop'; }
+    }
+  }
+
+  async function loadDepts() {
+    try {
+      const res = await fetch(`${API}/departments`);
+      if (!res.ok) return;
+      const depts = await res.json();
+      const sel = document.getElementById('deptFilter');
+      depts.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d.departmentId || d.id;
+        opt.textContent = (d.departmentId || d.id) + ' — ' + (d.departmentName || d.name);
+        sel.appendChild(opt);
+      });
+    } catch (err) { console.warn('Could not load departments:', err); }
+  }
+
+  async function searchCourses() {
+    const query = document.getElementById('searchInput').value.trim();
+    const dept  = document.getElementById('deptFilter').value;
+    const container = document.getElementById('searchContainer');
+    container.innerHTML = '<div class="empty-state"><div class="skeleton" style="width:50%;margin:0 auto 8px;"></div></div>';
+    try {
+      const params = new URLSearchParams();
+      if (query) params.set('q', query);
+      if (dept)  params.set('department', dept);
+      const res = await fetch(`${API}/sessions?${params.toString()}`);
+      if (!res.ok) throw new Error('Search failed');
+      searchResults = await res.json();
+      renderSearchResults();
+    } catch (err) {
+      console.error(err);
+      container.innerHTML = '<div class="empty-state" style="color:#9B1B30;">Search failed. Check server connection.</div>';
+    }
+  }
+
+  // KEY FIX: derives button state fresh from enrolledSessions every render
+  function renderSearchResults() {
+    const container = document.getElementById('searchContainer');
+    if (!searchResults.length) {
+      container.innerHTML = '<div class="empty-state">No sections match your search.</div>';
+      return;
+    }
+
+    const enrolledIds     = new Set(enrolledSessions.map(s => s.id || s.sessionId));
+    const enrolledCourses = new Set(enrolledSessions.map(s => s.course?.courseNumber || s.courseNumber || s.course));
+
+    container.innerHTML = searchResults.map(s => {
+      const sessionId     = s.id || s.sessionId;
+      const courseNum     = s.course?.courseNumber || s.courseNumber || s.course || '—';
+      const courseName    = s.course?.courseName   || s.courseName   || s.name  || '—';
+      const section       = s.sectionNumber || s.section || '001';
+      const instructor    = s.instructor
+        ? (s.instructor.firstName + ' ' + s.instructor.lastName)
+        : (s.instructorName || '—');
+      const modality      = s.modality || '—';
+      const credits       = s.course?.creditHours || s.creditHours || 0;
+      const isReal        = s.course?.realDesignation === 'y' || s.realDesignation === 'y';
+      const prereq        = (s.course?.prerequisites || s.prerequisites || []).join(', ') || 'None';
+      const maxStudents   = s.maxStudents || s.maximum || 0;
+      const enrolledCount = s.enrolledCount || s._count?.enrollments || 0;
+      const isFull        = maxStudents > 0 && enrolledCount >= maxStudents;
+      const isEnrolled    = enrolledIds.has(sessionId);
+      const isDuplicate   = !isEnrolled && enrolledCourses.has(courseNum);
+      const seatPct       = maxStudents > 0 ? Math.min(100, Math.round(enrolledCount / maxStudents * 100)) : 0;
+
+      let actionHtml;
+      if (isEnrolled)       actionHtml = '<span class="status-tag status-enrolled">Enrolled</span>';
+      else if (isFull)      actionHtml = '<span class="status-tag status-full">Full</span>';
+      else if (isDuplicate) actionHtml = '<span class="status-tag status-dup">Duplicate section</span>';
+      else                  actionHtml = `<button class="add-btn" id="add-${sessionId}" onclick="addCourse('${sessionId}')">Add</button>`;
+
+      return `
+      <div class="course-row" id="searchrow-${sessionId}">
+        <div class="course-tag">${courseNum}</div>
+        <div class="course-info">
+          <div class="course-name">${courseName}</div>
+          <div class="course-meta">
+            <span>§${section}</span><span>${instructor}</span><span>${credits} cr</span>
+            ${modalityPill(modality)}
+            ${isReal ? '<span class="meta-pill pill-real">REAL</span>' : ''}
+          </div>
+          <div class="course-meta" style="margin-top:4px;">
+            <span>Prereq: ${prereq}</span>
+            <span>${enrolledCount}/${maxStudents} seats</span>
+            <div class="seats-bar"><div class="seats-fill${isFull ? ' full' : ''}" style="width:${seatPct}%"></div></div>
+          </div>
+        </div>
+        ${actionHtml}
+      </div>`;
+    }).join('');
+  }
+
+  async function addCourse(sessionId) {
+    const studentId = currentUser.studentId || currentUser.id;
+    const btn = document.getElementById('add-' + sessionId);
+    if (btn) { btn.disabled = true; btn.textContent = '…'; }
+    clearAlerts();
+    try {
+      const res = await fetch(`${API}/enrollments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ studentId, sessionId })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        showAlert('addAlert', data.error || 'Could not add course.', 'error');
+        if (btn) { btn.disabled = false; btn.textContent = 'Add'; }
+        return;
+      }
+      enrolledSessions.push(data.enrollment || data);
+      renderEnrolled();
+      renderSearchResults();  // re-derives all button states
+      const courseNum = data.enrollment?.course?.courseNumber || sessionId;
+      showAlert('addAlert', courseNum + ' added to your schedule.', 'success');
+    } catch (err) {
+      console.error(err);
+      showAlert('addAlert', 'Unable to connect to server.', 'error');
+      if (btn) { btn.disabled = false; btn.textContent = 'Add'; }
+    }
+  }
+
+  function modalityPill(m) {
+    const map = { 'Online':'pill-online', 'In-person':'pill-inperson', 'Hybrid':'pill-hybrid', 'Asynchronous':'pill-async' };
+    return `<span class="meta-pill ${map[m] || 'pill-async'}">${m}</span>`;
+  }
+
+  function showAlert(id, msg, type) {
+    const el = document.getElementById(id);
+    el.className = `alert show alert-${type}`;
+    el.innerHTML = msg + '<span class="alert-close" onclick="this.parentElement.classList.remove(\'show\')">×</span>';
+    setTimeout(() => el.classList.remove('show'), 5000);
+  }
+
+  function clearAlerts() {
+    document.querySelectorAll('.alert').forEach(el => el.classList.remove('show'));
+  }
+
+  function logout() {
+    localStorage.removeItem('user');
+    localStorage.removeItem('semester');
+    window.location.href = 'login.html';
+  }
+</script>
+</body>
+</html>

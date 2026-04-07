@@ -1,0 +1,231 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    color: #111;
+}
+
+.top-banner {
+    background-color: #ffb300;
+    color: #000;
+    padding: 18px 24px;
+    border-bottom: 5px solid #000;
+}
+
+.logo-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.top-banner h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.top-banner p {
+    margin: 6px 0 0;
+    font-size: 14px;
+}
+
+nav {
+    background-color: #000;
+    padding: 12px 24px;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin-right: 18px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+.container,
+.hero,
+.info-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+}
+
+.container {
+    max-width: 950px;
+    margin: 40px auto;
+    padding: 32px;
+}
+
+.hero {
+    max-width: 1000px;
+    margin: 40px auto 20px;
+    padding: 36px;
+}
+
+.hero h2 {
+    margin-top: 0;
+    font-size: 32px;
+    color: #000;
+}
+
+.hero p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333;
+}
+
+.info-grid {
+    max-width: 1000px;
+    margin: 0 auto 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.info-card {
+    padding: 24px;
+}
+
+.info-card h3 {
+    margin-top: 0;
+    color: #000;
+}
+
+.info-card p {
+    color: #444;
+    line-height: 1.5;
+}
+
+input,
+select {
+    padding: 10px;
+    width: 100%;
+    max-width: 420px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+button {
+    background-color: #ffb300;
+    color: #000;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s ease;
+    margin-right: 8px;
+}
+
+button:hover {
+    background-color: #e6a200;
+    transform: translateY(-1px);
+}
+
+.drop-btn {
+    background-color: #c62828;
+    color: #fff;
+    margin-left: 10px;
+    padding: 6px 10px;
+    font-size: 12px;
+    border-radius: 5px;
+}
+
+.drop-btn:hover {
+    background-color: #a61d1d;
+}
+
+.button-row {
+    margin-top: 24px;
+}
+
+.button-row a {
+    text-decoration: none;
+}
+
+.main-btn {
+    display: inline-block;
+    background-color: #ffb300;
+    color: #000;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-weight: bold;
+    margin-right: 12px;
+    margin-bottom: 10px;
+}
+
+.main-btn:hover {
+    background-color: #e6a200;
+}
+
+.secondary-btn {
+    display: inline-block;
+    background-color: #000;
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-weight: bold;
+    margin-right: 12px;
+    margin-bottom: 10px;
+}
+
+.secondary-btn:hover {
+    background-color: #222;
+}
+
+.footer-actions {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.status-message {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.success {
+    color: green;
+}
+
+.error {
+    color: red;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: white;
+}
+
+th,
+td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #000;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+footer {
+    text-align: center;
+    padding: 24px;
+    font-size: 13px;
+    color: #666;
+    background-color: #fff;
+    border-top: 1px solid #ddd;
+    margin-top: 40px;
+}

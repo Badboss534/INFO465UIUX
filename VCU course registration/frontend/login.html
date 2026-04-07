@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VCU Course Registration Portal</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #C9A84C;
+      --gold-light: #E8C97A;
+      --gold-dim: #7A6230;
+      --black: #0D0D0D;
+      --surface: #F7F4EF;
+      --surface-2: #EDE9E1;
+      --text: #1A1A1A;
+      --text-muted: #6B6459;
+      --border: rgba(0,0,0,0.10);
+      --red-accent: #9B1B30;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--surface);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .top-banner {
+      background: var(--black);
+      padding: 0 2.5rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #222;
+    }
+
+    .logo-row { display: flex; align-items: center; gap: 14px; }
+    .logo-row img { height: 38px; filter: brightness(0) invert(1); }
+    .logo-row .wordmark { border-left: 1px solid #333; padding-left: 14px; }
+    .logo-row h1 {
+      font-family: 'EB Garamond', serif;
+      font-size: 17px; font-weight: 400; color: #fff; letter-spacing: 0.01em; line-height: 1.2;
+    }
+    .logo-row p { font-size: 11px; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 2px; }
+
+    .session-chip {
+      font-size: 11px; padding: 4px 12px; border: 1px solid var(--gold-dim);
+      border-radius: 999px; color: var(--gold); letter-spacing: 0.08em;
+    }
+
+    nav {
+      background: var(--black);
+      border-bottom: 1px solid #1e1e1e;
+      display: flex; gap: 0; padding: 0 2.5rem;
+    }
+    nav a {
+      font-size: 13px; color: #999; text-decoration: none; padding: 12px 18px;
+      letter-spacing: 0.04em; transition: color 0.15s; border-bottom: 2px solid transparent;
+    }
+    nav a:hover { color: #fff; }
+    nav a.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+    .page-body {
+      flex: 1; display: grid;
+      grid-template-columns: 1fr 420px 1fr;
+      align-items: start; padding: 5rem 2rem 3rem; gap: 2rem;
+    }
+
+    .aside-text {
+      font-family: 'EB Garamond', serif; font-size: 42px;
+      line-height: 1.15; color: var(--text); font-weight: 400;
+    }
+    .aside-text em { font-style: italic; color: var(--gold-dim); }
+    .aside-sub { margin-top: 1rem; font-size: 14px; color: var(--text-muted); line-height: 1.6; max-width: 240px; }
+    .divider-line { width: 40px; height: 1px; background: var(--gold); margin: 1.25rem 0; }
+
+    .info-list { list-style: none; margin-top: 1.5rem; }
+    .info-list li {
+      font-size: 13px; color: var(--text-muted); padding: 6px 0;
+      border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px;
+    }
+    .info-list li::before {
+      content: ''; width: 5px; height: 5px; border-radius: 50%;
+      background: var(--gold); flex-shrink: 0;
+    }
+
+    .login-card {
+      background: #fff; border: 1px solid var(--border); border-radius: 4px;
+      padding: 2.5rem 2rem; box-shadow: 0 2px 24px rgba(0,0,0,0.06);
+    }
+    .card-eyebrow { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 6px; }
+    .card-title { font-family: 'EB Garamond', serif; font-size: 26px; font-weight: 400; color: var(--text); margin-bottom: 2rem; }
+
+    .field-group { margin-bottom: 1.25rem; }
+    .field-group label { display: block; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+    .field-group input, .field-group select {
+      width: 100%; height: 44px; padding: 0 14px; border: 1px solid #DDD; border-radius: 3px;
+      font-size: 15px; font-family: 'DM Sans', sans-serif; color: var(--text);
+      background: var(--surface); transition: border-color 0.15s, box-shadow 0.15s; outline: none;
+    }
+    .field-group input:focus, .field-group select:focus {
+      border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,168,76,0.15); background: #fff;
+    }
+    .field-group input::placeholder { color: #BBB; }
+
+    .submit-btn {
+      width: 100%; height: 48px; background: var(--black); color: #fff; border: none;
+      border-radius: 3px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500;
+      letter-spacing: 0.06em; cursor: pointer; transition: background 0.15s, transform 0.1s;
+      margin-top: 0.5rem; position: relative; overflow: hidden;
+    }
+    .submit-btn:hover { background: #1f1f1f; }
+    .submit-btn:active { transform: scale(0.99); }
+    .submit-btn .btn-inner { display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .submit-btn .btn-arrow { font-size: 16px; transition: transform 0.2s; }
+    .submit-btn:hover .btn-arrow { transform: translateX(4px); }
+    .submit-btn.loading .btn-inner { opacity: 0; }
+    .submit-btn.loading::after {
+      content: ''; position: absolute; width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff;
+      border-radius: 50%; animation: spin 0.6s linear infinite;
+      top: 50%; left: 50%; transform: translate(-50%, -50%);
+    }
+    @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+    .error-msg {
+      display: none; margin-top: 12px; padding: 10px 14px;
+      background: #FDF3F4; border: 1px solid #F5C1C5; border-radius: 3px;
+      font-size: 13px; color: var(--red-accent);
+    }
+    .error-msg.show { display: block; }
+
+    .card-divider { margin: 1.75rem 0; border: none; border-top: 1px solid var(--border); }
+
+    .instructor-link { text-align: center; font-size: 13px; color: var(--text-muted); }
+    .instructor-link a {
+      color: var(--text); font-weight: 500; text-decoration: none;
+      border-bottom: 1px solid var(--gold); padding-bottom: 1px; transition: color 0.15s;
+    }
+    .instructor-link a:hover { color: var(--gold-dim); }
+
+    .notice-card {
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 4px; padding: 1.25rem 1.5rem; margin-bottom: 1rem;
+    }
+    .notice-card h4 { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 8px; }
+    .notice-card p { font-size: 13px; color: var(--text-muted); line-height: 1.55; }
+    .notice-card .date-chip {
+      display: inline-block; font-size: 11px; font-weight: 500; background: var(--black);
+      color: var(--gold); padding: 3px 10px; border-radius: 2px; margin-top: 10px; letter-spacing: 0.06em;
+    }
+
+    footer { text-align: center; padding: 1.5rem; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); }
+
+    @media (max-width: 860px) {
+      .page-body { grid-template-columns: 1fr; padding: 2rem 1rem; }
+      .aside-left, .aside-right { display: none; }
+      .top-banner { padding: 0 1rem; }
+      nav { padding: 0 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-banner">
+    <div class="logo-row">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/VCU_Rams_logo.svg" alt="VCU Logo" />
+      <div class="wordmark">
+        <h1>VCU Course Registration Portal</h1>
+        <p>Summer Session 2026</p>
+      </div>
+    </div>
+    <div class="session-chip">Summer 2026</div>
+  </div>
+
+  <nav>
+    <a href="home.html">Home</a>
+    <a href="course.html">Course Search</a>
+    <a href="login.html" class="active">Login</a>
+  </nav>
+
+  <div class="page-body">
+    <div class="aside-left">
+      <p class="aside-text">Register for <em>Summer</em> 2026 courses</p>
+      <div class="divider-line"></div>
+      <p class="aside-sub">Access your enrollment portal using your VCU student ID number.</p>
+      <ul class="info-list">
+        <li>Add or drop sessions</li>
+        <li>View enrolled courses</li>
+        <li>Search by department or instructor</li>
+        <li>Check seat availability</li>
+      </ul>
+    </div>
+
+    <div class="login-card">
+      <p class="card-eyebrow">Student Portal</p>
+      <h2 class="card-title">Sign in to your account</h2>
+
+      <div class="field-group">
+        <label for="studentNumber">Student ID number</label>
+        <input type="text" id="studentNumber" placeholder="e.g. V00123456" autocomplete="off"
+          onkeydown="if(event.key==='Enter') loginStudent()" />
+      </div>
+
+      <div class="field-group">
+        <label for="semesterSelect">Semester</label>
+        <select id="semesterSelect">
+          <option value="summer2026" selected>Summer 2026</option>
+          <option value="fall2026">Fall 2026</option>
+          <option value="spring2027">Spring 2027</option>
+        </select>
+      </div>
+
+      <button class="submit-btn" id="loginBtn" onclick="loginStudent()">
+        <span class="btn-inner">Sign in <span class="btn-arrow">→</span></span>
+      </button>
+
+      <div class="error-msg" id="errorMsg"></div>
+
+      <hr class="card-divider" />
+
+      <p class="instructor-link">
+        Instructor or administrator? <a href="instructor-login.html">Sign in here</a>
+      </p>
+    </div>
+
+    <div class="aside-right">
+      <div class="notice-card">
+        <h4>Registration Open</h4>
+        <p>Summer 2026 registration is now open for all eligible students.</p>
+        <span class="date-chip">Closes May 15, 2026</span>
+      </div>
+      <div class="notice-card">
+        <h4>Need Help?</h4>
+        <p>VCU IT Help Desk: 804-828-2227<br />Available Mon–Fri, 8am–6pm</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>&copy; 2026 Virginia Commonwealth University &nbsp;·&nbsp; Office of the University Registrar</footer>
+
+  <script>
+    async function loginStudent() {
+      const studentNumber = document.getElementById('studentNumber').value.trim();
+      const semester = document.getElementById('semesterSelect').value;
+      const errorMsg = document.getElementById('errorMsg');
+      const btn = document.getElementById('loginBtn');
+
+      errorMsg.classList.remove('show');
+
+      if (!studentNumber) { showError('Please enter your student ID number.'); return; }
+
+      btn.classList.add('loading');
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('http://localhost:3000/login/student', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ studentNumber })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) { showError(data.error || 'Student ID not found. Please try again.'); return; }
+
+        localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.setItem('semester', semester);
+        window.location.href = 'registration.html';
+
+      } catch (err) {
+        console.error(err);
+        showError('Unable to connect to server. Make sure the server is running on port 3000.');
+      } finally {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+      }
+    }
+
+    function showError(msg) {
+      const el = document.getElementById('errorMsg');
+      el.textContent = msg;
+      el.classList.add('show');
+    }
+  </script>
+</body>
+</html>
