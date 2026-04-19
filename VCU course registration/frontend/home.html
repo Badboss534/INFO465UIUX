@@ -7,158 +7,107 @@
   <link rel="stylesheet" href="styles.css" />
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --gold: #C9A84C; --gold-dim: #7A6230; --gold-light: #E8C97A;
-      --black: #0D0D0D; --surface: #F7F4EF; --surface-2: #EDE9E1;
-      --text: #1A1A1A; --text-muted: #6B6459; --border: rgba(0,0,0,0.10);
-      --red-accent: #9B1B30;
-    }
-    body { font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+    /* Dark hero, light body */
+    body { background: var(--surface); }
 
-    /* ── banner ── */
-    .top-banner {
-      background: var(--black); padding: 0 2.5rem; height: 64px;
-      display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #222;
+    /* ── Notice strip ── */
+    .notice-strip {
+      background: #111; border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 1rem 2.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem;
     }
-    .logo-row { display: flex; align-items: center; gap: 14px; }
-    .logo-row img { height: 38px; filter: brightness(0) invert(1); }
-    .logo-row .wordmark { border-left: 1px solid #333; padding-left: 14px; }
-    .logo-row h1 { font-family: 'EB Garamond', serif; font-size: 17px; font-weight: 400; color: #fff; }
-    .logo-row p  { font-size: 11px; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 2px; }
-    .session-chip { font-size: 11px; padding: 4px 12px; border: 1px solid var(--gold-dim); border-radius: 999px; color: var(--gold); letter-spacing: 0.06em; }
+    .notice-strip p { font-size: 13px; color: #bbb; }
+    .notice-strip strong { color: #fff; }
+    .notice-date {
+      font-size: 11px; font-weight: 500; background: var(--gold); color: var(--black);
+      padding: 3px 12px; border-radius: 2px; letter-spacing: 0.06em; white-space: nowrap;
+    }
 
-    /* ── nav ── */
-    nav { background: var(--black); border-bottom: 1px solid #1e1e1e; display: flex; padding: 0 2.5rem; }
-    nav a {
-      font-size: 13px; color: #999; text-decoration: none; padding: 12px 18px;
-      letter-spacing: 0.04em; border-bottom: 2px solid transparent; transition: color 0.15s;
+    /* ── Hero (dark box centered, cream sides) ── */
+    .hero { background: var(--surface); padding: 3rem 1.5rem 3rem; }
+    .hero-inner {
+      max-width: 1100px; margin: 0 auto; padding: 3.5rem 3rem;
+      display: grid; grid-template-columns: 1fr 380px; gap: 4rem; align-items: center;
+      background: var(--black); border-radius: 6px; border-bottom: 4px solid var(--gold);
     }
-    nav a:hover { color: #fff; }
-    nav a.active { color: var(--gold); border-bottom-color: var(--gold); }
-
-    /* ── hero ── */
-    .hero {
-      background: var(--black);
-      padding: 5rem 2.5rem 4.5rem;
-      display: grid;
-      grid-template-columns: 1fr 380px;
-      gap: 4rem;
-      align-items: center;
-      max-width: 100%;
-    }
-    .hero-left {}
-    .hero-eyebrow {
-      font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
-      color: var(--gold); margin-bottom: 1rem;
-    }
+    .hero-eyebrow { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
     .hero-title {
       font-family: 'EB Garamond', serif; font-size: 52px; font-weight: 400;
-      color: #fff; line-height: 1.1; margin-bottom: 1.5rem;
+      color: var(--gold); line-height: 1.1; margin-bottom: 1.5rem;
     }
-    .hero-title em { font-style: italic; color: var(--gold-light); }
-    .hero-desc { font-size: 15px; color: #999; line-height: 1.7; max-width: 520px; margin-bottom: 2rem; }
+    .hero-title em { font-style: normal; color: var(--gold); }
+    .hero .hero-desc { font-size: 15px; color: #ccc; line-height: 1.7; max-width: 520px; margin-bottom: 2rem; }
     .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
     .btn-primary {
       height: 46px; padding: 0 28px; background: var(--gold); color: var(--black);
       border: none; border-radius: 3px; font-family: 'DM Sans', sans-serif;
       font-size: 14px; font-weight: 500; cursor: pointer; text-decoration: none;
-      display: inline-flex; align-items: center; gap: 8px; letter-spacing: 0.04em;
-      transition: background 0.15s;
+      display: inline-flex; align-items: center; gap: 8px; letter-spacing: 0.04em; transition: opacity 0.15s;
     }
-    .btn-primary:hover { background: var(--gold-light); }
+    .btn-primary:hover { opacity: 0.88; }
     .btn-secondary {
-      height: 46px; padding: 0 28px; background: transparent; color: #fff;
-      border: 1px solid #444; border-radius: 3px; font-family: 'DM Sans', sans-serif;
+      height: 46px; padding: 0 28px; background: transparent; color: #ddd;
+      border: 1px solid rgba(255,255,255,0.2); border-radius: 3px; font-family: 'DM Sans', sans-serif;
       font-size: 14px; cursor: pointer; text-decoration: none;
       display: inline-flex; align-items: center; gap: 8px; transition: border-color 0.15s, color 0.15s;
     }
-    .btn-secondary:hover { border-color: #888; color: #fff; }
+    .btn-secondary:hover { border-color: rgba(255,255,255,0.5); color: #fff; }
 
-    /* ── hero right: stats ── */
-    .hero-stats {
-      background: #141414; border: 1px solid #222; border-radius: 4px; padding: 1.75rem;
-    }
-    .hero-stats-title { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #555; margin-bottom: 1.25rem; }
-    .stat-item { padding: 12px 0; border-bottom: 1px solid #222; display: flex; align-items: center; justify-content: space-between; }
+    /* ── Hero stats panel (dark card inside dark hero) ── */
+    .hero-stats { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.10); border-radius: 4px; padding: 1.75rem; }
+    .hero-stats-title { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #aaa; margin-bottom: 1.25rem; }
+    .stat-item { padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.07); display: flex; align-items: center; justify-content: space-between; }
     .stat-item:last-child { border-bottom: none; padding-bottom: 0; }
-    .stat-item .label { font-size: 13px; color: #777; }
+    .stat-item .label { font-size: 13px; color: #aaa; }
     .stat-item .value { font-size: 20px; font-weight: 500; color: #fff; }
     .stat-item .value.gold { color: var(--gold); }
 
-    /* ── feature cards ── */
+    /* ── Feature cards section (light) ── */
     .features { max-width: 1100px; margin: 0 auto; padding: 4rem 1.5rem; flex: 1; }
     .features-header { margin-bottom: 2.5rem; }
-    .features-header h2 { font-family: 'EB Garamond', serif; font-size: 28px; font-weight: 400; }
+    .features-header h2 { font-family: 'EB Garamond', serif; font-size: 28px; font-weight: 400; color: var(--text); }
     .features-header p  { font-size: 14px; color: var(--text-muted); margin-top: 6px; }
-    .divider-line { width: 40px; height: 1px; background: var(--gold); margin: 1rem 0; }
-
     .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 
     .feature-card {
       background: #fff; border: 1px solid var(--border); border-radius: 4px;
-      padding: 1.5rem; transition: border-color 0.15s, box-shadow 0.15s;
-      display: flex; flex-direction: column;
+      padding: 1.5rem; transition: border-color 0.15s, box-shadow 0.15s; display: flex; flex-direction: column;
     }
-    .feature-card:hover { border-color: rgba(201,168,76,0.35); box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
+    .feature-card:hover { border-color: rgba(201,168,76,0.6); box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
 
     .card-icon {
       width: 36px; height: 36px; border-radius: 3px; margin-bottom: 1.1rem;
       display: flex; align-items: center; justify-content: center; font-size: 16px;
     }
-    .icon-gold   { background: rgba(201,168,76,0.12); }
-    .icon-blue   { background: #E6F1FB; }
-    .icon-green  { background: #EAF3DE; }
+    .icon-gold  { background: rgba(201,168,76,0.12); }
+    .icon-blue  { background: rgba(12,68,124,0.10); }
+    .icon-green { background: rgba(59,109,17,0.10); }
 
-    .card-num { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
-    .card-title { font-size: 16px; font-weight: 500; margin-bottom: 10px; }
+    .card-num   { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #aaa; margin-bottom: 6px; }
+    .card-title { font-size: 16px; font-weight: 500; color: var(--text); margin-bottom: 10px; }
     .card-desc  { font-size: 13px; color: var(--text-muted); line-height: 1.6; flex: 1; }
     .card-link  {
-      margin-top: 1.25rem; font-size: 13px; font-weight: 500; color: var(--gold-dim);
+      margin-top: 1.25rem; font-size: 13px; font-weight: 500; color: var(--gold);
       text-decoration: none; display: inline-flex; align-items: center; gap: 5px;
       border-bottom: 1px solid transparent; transition: border-color 0.15s;
     }
-    .card-link:hover { border-bottom-color: var(--gold-dim); }
+    .card-link:hover { border-bottom-color: var(--gold); }
 
-    /* ── notice strip ── */
-    .notice-strip {
-      background: var(--surface-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-      padding: 1rem 2.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-    }
-    .notice-strip p { font-size: 13px; color: var(--text-muted); }
-    .notice-strip strong { color: var(--text); }
-    .notice-date {
-      font-size: 11px; font-weight: 500; background: var(--black); color: var(--gold);
-      padding: 3px 12px; border-radius: 2px; letter-spacing: 0.06em; white-space: nowrap;
-    }
-
-    /* ── quick links ── */
+    /* ── Quick links (light) ── */
     .quick-links { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem 4rem; }
-    .quick-links h3 { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px; }
+    .quick-links h3 { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #aaa; margin-bottom: 14px; }
     .links-row { display: flex; gap: 10px; flex-wrap: wrap; }
     .quick-link {
       font-size: 13px; padding: 8px 18px; border: 1px solid var(--border); border-radius: 3px;
-      color: var(--text); text-decoration: none; background: #fff;
-      transition: border-color 0.15s, background 0.12s;
+      color: var(--text-muted); text-decoration: none; background: #fff; transition: border-color 0.15s, color 0.15s;
     }
-    .quick-link:hover { border-color: var(--gold-dim); background: var(--surface); }
-
-    /* ── footer ── */
-    footer {
-      background: var(--black); padding: 1.5rem 2.5rem;
-      display: flex; align-items: center; justify-content: space-between;
-      border-top: 1px solid #1e1e1e;
-    }
-    footer p { font-size: 12px; color: #555; }
-    footer .footer-links { display: flex; gap: 20px; }
-    footer .footer-links a { font-size: 12px; color: #555; text-decoration: none; transition: color 0.15s; }
-    footer .footer-links a:hover { color: #999; }
+    .quick-link:hover { border-color: var(--gold); color: var(--text); }
 
     @media (max-width: 900px) {
-      .hero { grid-template-columns: 1fr; padding: 3rem 1.5rem; }
+      .hero { padding: 1.5rem 1rem; }
+      .hero-inner { grid-template-columns: 1fr; padding: 2rem 1.5rem; border-radius: 4px; }
       .hero-stats { display: none; }
       .cards-grid { grid-template-columns: 1fr; }
-      .top-banner, nav, footer { padding-left: 1rem; padding-right: 1rem; }
+      .top-banner, nav { padding-left: 1rem; padding-right: 1rem; }
       .notice-strip { padding: 1rem; flex-direction: column; align-items: flex-start; }
     }
   </style>
@@ -167,10 +116,10 @@
 
 <div class="top-banner">
   <div class="logo-row">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/VCU_Rams_logo.svg" alt="VCU" />
+    <img src="VCU_Rams_logo.svg.png" alt="VCU" />
     <div class="wordmark">
       <h1>VCU Course Registration Portal</h1>
-      <p>Summer Session 2026</p>
+      <p>Home | Summer Session 2026</p>
     </div>
   </div>
   <div class="session-chip">Summer 2026</div>
@@ -183,11 +132,18 @@
   <a href="instructor-login.html">Instructor Login</a>
 </nav>
 
+<!-- Notice strip -->
+<div class="notice-strip">
+  <p><strong>Registration is now open</strong> for the Summer 2026 session. <a href="login.html" style="color:var(--gold);text-decoration:underline;text-underline-offset:2px;">Sign in with your student ID to add or drop courses.</a></p>
+  <span class="notice-date">Closes May 15, 2026</span>
+</div>
+
 <!-- Hero -->
 <div class="hero">
+  <div class="hero-inner">
   <div class="hero-left">
     <div class="hero-eyebrow">Virginia Commonwealth University &nbsp;·&nbsp; Summer 2026</div>
-    <h2 class="hero-title">Course<br>Registration<br><em>Portal</em></h2>
+    <h2 class="hero-title" style="color:#C9A84C;">Course<br>Registration<br><em>Portal</em></h2>
     <p class="hero-desc">
       Browse available sessions, register for courses, manage your schedule,
       and view instructor rosters — all in one place for the Summer 2026 term.
@@ -220,12 +176,7 @@
       <span class="value" style="font-size:15px;">May 15, 2026</span>
     </div>
   </div>
-</div>
-
-<!-- Notice strip -->
-<div class="notice-strip">
-  <p><strong>Registration is now open</strong> for the Summer 2026 session. Sign in with your student ID to add or drop courses.</p>
-  <span class="notice-date">Closes May 15, 2026</span>
+  </div>
 </div>
 
 <!-- Feature cards -->
@@ -239,7 +190,7 @@
   <div class="cards-grid">
     <div class="feature-card">
       <div class="card-icon icon-gold">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="8" cy="8" r="5.5" stroke="#7A6230" stroke-width="1.5"/><path d="M12.5 12.5L16 16" stroke="#7A6230" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="8" cy="8" r="5.5" stroke="#C9A84C" stroke-width="1.5"/><path d="M12.5 12.5L16 16" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round"/></svg>
       </div>
       <div class="card-num">01</div>
       <div class="card-title">Course Search</div>
@@ -281,14 +232,8 @@
   </div>
 </div>
 
-<footer>
-  <p>&copy; 2026 Virginia Commonwealth University &nbsp;·&nbsp; Office of the University Registrar</p>
-  <div class="footer-links">
-    <a href="#">VCU.edu</a>
-    <a href="#">Registrar</a>
-    <a href="#">IT Help Desk</a>
-  </div>
-</footer>
+<div id="footer-placeholder"></div>
+<script src="footer.js"></script>
 
 <script>
   // Pull live stats from the backend to populate the hero panel
@@ -325,5 +270,8 @@
 
   loadStats();
 </script>
+
+<!-- ── Ram AI Chatbot ──────────────────────────────────────────── -->
+<script src="ram-chatbot.js"></script>
 </body>
 </html>

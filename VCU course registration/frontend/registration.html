@@ -7,46 +7,6 @@
   <link rel="stylesheet" href="styles.css" />
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --gold: #C9A84C; --gold-dim: #7A6230; --black: #0D0D0D;
-      --surface: #F7F4EF; --surface-2: #EDE9E1; --text: #1A1A1A;
-      --text-muted: #6B6459; --border: rgba(0,0,0,0.10); --red-accent: #9B1B30;
-    }
-    body { font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--text); min-height: 100vh; }
-
-    .top-banner {
-      background: var(--black); padding: 0 2.5rem; height: 64px;
-      display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #222;
-    }
-    .logo-row { display: flex; align-items: center; gap: 14px; }
-    .logo-row img { height: 38px; filter: brightness(0) invert(1); }
-    .logo-row .wordmark { border-left: 1px solid #333; padding-left: 14px; }
-    .logo-row h1 { font-family: 'EB Garamond', serif; font-size: 17px; font-weight: 400; color: #fff; }
-    .logo-row p { font-size: 11px; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 2px; }
-    .banner-right { display: flex; align-items: center; gap: 14px; }
-    .student-chip { font-size: 12px; color: #999; }
-    .student-chip strong { color: #fff; }
-    .logout-btn {
-      font-size: 12px; padding: 5px 14px; border: 1px solid #333; border-radius: 2px;
-      color: #999; background: transparent; cursor: pointer; font-family: 'DM Sans', sans-serif;
-      transition: border-color 0.15s, color 0.15s;
-    }
-    .logout-btn:hover { border-color: #555; color: #fff; }
-
-    nav { background: var(--black); border-bottom: 1px solid #1e1e1e; display: flex; padding: 0 2.5rem; }
-    nav a {
-      font-size: 13px; color: #999; text-decoration: none; padding: 12px 18px;
-      letter-spacing: 0.04em; border-bottom: 2px solid transparent; transition: color 0.15s;
-    }
-    nav a:hover { color: #fff; }
-    nav a.active { color: var(--gold); border-bottom-color: var(--gold); }
-
-    .page { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.5rem; }
-    .page-header { margin-bottom: 2rem; }
-    .page-header h2 { font-family: 'EB Garamond', serif; font-size: 30px; font-weight: 400; }
-    .page-header p { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
-
     .tab-bar { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.75rem; }
     .tab-btn {
       font-size: 14px; font-family: 'DM Sans', sans-serif; padding: 10px 22px;
@@ -58,9 +18,6 @@
     .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
     .section-title { font-size: 15px; font-weight: 500; }
     .credit-badge { font-size: 12px; padding: 3px 12px; background: var(--black); color: var(--gold); border-radius: 2px; letter-spacing: 0.06em; }
-
-    .card { background: #fff; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
-    .empty-state { padding: 3rem; text-align: center; color: var(--text-muted); font-size: 14px; }
 
     .course-row {
       display: flex; align-items: center; gap: 14px; padding: 14px 18px;
@@ -78,28 +35,21 @@
     .course-name { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .course-meta { font-size: 12px; color: var(--text-muted); margin-top: 3px; display: flex; flex-wrap: wrap; gap: 10px; }
 
-    .meta-pill { font-size: 11px; padding: 2px 9px; border-radius: 2px; font-weight: 500; }
-    .pill-online   { background: #EAF3DE; color: #3B6D11; }
-    .pill-inperson { background: #E6F1FB; color: #0C447C; }
-    .pill-hybrid   { background: #FAEEDA; color: #633806; }
-    .pill-async    { background: #F1EFE8; color: #5F5E5A; }
-    .pill-real     { background: #FDF3F4; color: var(--red-accent); border: 1px solid #F5C1C5; }
-
     .drop-btn {
       font-size: 13px; padding: 6px 16px; font-family: 'DM Sans', sans-serif;
-      background: transparent; border: 1px solid #DDD; border-radius: 2px; cursor: pointer;
+      background: transparent; border: 1px solid var(--input-border); border-radius: 2px; cursor: pointer;
       color: var(--text-muted); transition: background 0.12s, border-color 0.12s, color 0.12s; flex-shrink: 0;
     }
-    .drop-btn:hover { background: #FDF3F4; border-color: #F5C1C5; color: var(--red-accent); }
+    .drop-btn:hover { background: var(--error-bg); border-color: var(--error-border); color: var(--red-accent); }
 
     .search-bar { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; margin-bottom: 1.25rem; }
     .search-bar input, .search-bar select {
-      height: 40px; padding: 0 14px; border: 1px solid #DDD; border-radius: 3px;
+      height: 40px; padding: 0 14px; border: 1px solid var(--input-border); border-radius: 3px;
       font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--text);
       background: #fff; outline: none; transition: border-color 0.15s, box-shadow 0.15s;
     }
     .search-bar input:focus, .search-bar select:focus {
-      border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,168,76,0.12);
+      border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-glow);
     }
     .search-bar input::placeholder { color: #BBB; }
     .search-btn {
@@ -111,40 +61,14 @@
 
     .add-btn {
       font-size: 13px; padding: 6px 16px; font-family: 'DM Sans', sans-serif;
-      border: 1px solid #C0DD97; border-radius: 2px; cursor: pointer;
-      color: #3B6D11; background: #EAF3DE; transition: background 0.12s; flex-shrink: 0;
+      border: 1px solid var(--enroll-border); border-radius: 2px; cursor: pointer;
+      color: var(--enroll-text); background: var(--enroll-bg); transition: background 0.12s; flex-shrink: 0;
     }
-    .add-btn:hover { background: #C0DD97; }
+    .add-btn:hover { background: var(--enroll-border); }
     .add-btn:disabled { opacity: 0.5; cursor: default; }
-
-    .status-tag { font-size: 12px; padding: 5px 12px; border-radius: 2px; white-space: nowrap; flex-shrink: 0; }
-    .status-enrolled { background: #E6F1FB; color: #0C447C; }
-    .status-full     { background: var(--surface-2); color: var(--text-muted); }
-    .status-dup      { background: #FAEEDA; color: #633806; }
-
-    .seats-bar { width: 60px; height: 4px; background: var(--surface-2); border-radius: 2px; flex-shrink: 0; }
-    .seats-fill { height: 100%; border-radius: 2px; background: var(--gold); }
-    .seats-fill.full { background: var(--red-accent); }
-
-    .alert {
-      display: none; padding: 11px 16px; border-radius: 3px; font-size: 13px;
-      margin-bottom: 14px; border: 1px solid transparent;
-    }
-    .alert.show { display: flex; align-items: center; gap: 10px; }
-    .alert-success { background: #EAF3DE; color: #3B6D11; border-color: #C0DD97; }
-    .alert-error   { background: #FDF3F4; color: var(--red-accent); border-color: #F5C1C5; }
-    .alert-close   { margin-left: auto; cursor: pointer; font-size: 16px; opacity: 0.6; }
-    .alert-close:hover { opacity: 1; }
-
-    .skeleton {
-      background: linear-gradient(90deg, var(--surface-2) 25%, #e8e4dc 50%, var(--surface-2) 75%);
-      background-size: 200% 100%; animation: shimmer 1.2s infinite; border-radius: 3px; height: 14px;
-    }
-    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
     @media (max-width: 680px) {
       .search-bar { grid-template-columns: 1fr; }
-      .top-banner, nav { padding: 0 1rem; }
     }
   </style>
 </head>
@@ -152,10 +76,10 @@
 
 <div class="top-banner">
   <div class="logo-row">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/VCU_Rams_logo.svg" alt="VCU" />
+    <img src="VCU_Rams_logo.svg.png" alt="VCU" />
     <div class="wordmark">
       <h1>VCU Course Registration Portal</h1>
-      <p>Summer Session 2026</p>
+      <p>My Registration | Summer Session 2026</p>
     </div>
   </div>
   <div class="banner-right">
@@ -452,5 +376,8 @@
     window.location.href = 'login.html';
   }
 </script>
+<script src="chatbot.js"></script>
+<div id="footer-placeholder"></div>
+<script src="footer.js"></script>
 </body>
 </html>

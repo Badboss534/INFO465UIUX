@@ -7,44 +7,6 @@
   <link rel="stylesheet" href="styles.css" />
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --gold: #C9A84C; --gold-dim: #7A6230; --gold-light: #E8C97A;
-      --black: #0D0D0D; --surface: #F7F4EF; --surface-2: #EDE9E1;
-      --text: #1A1A1A; --text-muted: #6B6459; --border: rgba(0,0,0,0.10);
-      --red-accent: #9B1B30;
-    }
-    body { font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--text); min-height: 100vh; }
-
-    .top-banner {
-      background: var(--black); padding: 0 2.5rem; height: 64px;
-      display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #222;
-    }
-    .logo-row { display: flex; align-items: center; gap: 14px; }
-    .logo-row img { height: 38px; filter: brightness(0) invert(1); }
-    .logo-row .wordmark { border-left: 1px solid #333; padding-left: 14px; }
-    .logo-row h1 { font-family: 'EB Garamond', serif; font-size: 17px; font-weight: 400; color: #fff; }
-    .logo-row p  { font-size: 11px; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 2px; }
-    .banner-right { display: flex; align-items: center; gap: 14px; }
-    .instructor-chip { font-size: 12px; color: #999; }
-    .instructor-chip strong { color: #fff; }
-    .logout-btn {
-      font-size: 12px; padding: 5px 14px; border: 1px solid #333; border-radius: 2px;
-      color: #999; background: transparent; cursor: pointer; font-family: 'DM Sans', sans-serif;
-      transition: border-color 0.15s, color 0.15s;
-    }
-    .logout-btn:hover { border-color: #555; color: #fff; }
-
-    nav { background: var(--black); border-bottom: 1px solid #1e1e1e; display: flex; padding: 0 2.5rem; }
-    nav a {
-      font-size: 13px; color: #999; text-decoration: none; padding: 12px 18px;
-      letter-spacing: 0.04em; border-bottom: 2px solid transparent; transition: color 0.15s;
-    }
-    nav a:hover { color: #fff; }
-    nav a.active { color: var(--gold); border-bottom-color: var(--gold); }
-
-    .page { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.5rem; }
-
     .welcome-strip {
       display: flex; align-items: flex-start; justify-content: space-between;
       margin-bottom: 2rem; gap: 1rem;
@@ -81,7 +43,7 @@
     .enrollment-bar-wrap .bar-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 5px; }
     .enroll-bar  { width: 100%; height: 5px; background: var(--surface-2); border-radius: 3px; }
     .enroll-fill { height: 100%; border-radius: 3px; background: var(--gold); transition: width 0.4s; }
-    .enroll-fill.high { background: #639922; }
+    .enroll-fill.high { background: var(--enroll-high); }
     .enroll-fill.full { background: var(--red-accent); }
 
     .roster-btn {
@@ -92,34 +54,8 @@
     .roster-btn:hover { background: #1f1f1f; }
     .roster-btn.loading { opacity: 0.7; cursor: default; }
 
-    .meta-pill { font-size: 11px; padding: 2px 9px; border-radius: 2px; font-weight: 500; }
-    .pill-online   { background: #EAF3DE; color: #3B6D11; }
-    .pill-inperson { background: #E6F1FB; color: #0C447C; }
-    .pill-hybrid   { background: #FAEEDA; color: #633806; }
-    .pill-async    { background: #F1EFE8; color: #5F5E5A; }
-
-    .empty-state { padding: 3rem; text-align: center; color: var(--text-muted); font-size: 14px; }
-
-    .modal-bg {
-      display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.45); z-index: 100;
-      align-items: center; justify-content: center; padding: 1rem;
-    }
-    .modal-bg.open { display: flex; }
-    .modal {
-      background: #fff; border-radius: 4px; border: 1px solid var(--border);
-      width: 100%; max-width: 660px; max-height: 90vh; overflow-y: auto;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.18);
-    }
-    .modal-header {
-      display: flex; align-items: flex-start; justify-content: space-between;
-      padding: 1.5rem 1.5rem 1rem; border-bottom: 1px solid var(--border);
-      position: sticky; top: 0; background: #fff; z-index: 1;
-    }
-    .modal-header h3 { font-family: 'EB Garamond', serif; font-size: 22px; font-weight: 400; }
-    .modal-header .sub { font-size: 13px; color: var(--text-muted); margin-top: 3px; }
-    .modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text-muted); padding: 0 0 0 12px; flex-shrink: 0; }
-    .modal-body { padding: 1.25rem 1.5rem; }
+    .modal { max-width: 660px; }
+    .modal-header { position: sticky; top: 0; background: #fff; z-index: 1; }
 
     .roster-meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1.25rem; }
     .roster-meta-item label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 3px; }
@@ -136,16 +72,11 @@
     .roster-table tbody tr:hover { background: var(--surface); }
     .roster-table tbody td { padding: 10px 12px; }
     .student-id-cell { font-size: 12px; color: var(--text-muted); font-family: monospace; }
-    .va-badge { font-size: 10px; padding: 1px 6px; border-radius: 2px; background: #E6F1FB; color: #0C447C; }
+    .va-badge { font-size: 10px; padding: 1px 6px; border-radius: 2px; background: var(--enrolled-bg); color: var(--enrolled-text); }
 
-    .skeleton { background: linear-gradient(90deg,var(--surface-2) 25%,#e8e4dc 50%,var(--surface-2) 75%); background-size:200% 100%; animation:shimmer 1.2s infinite; border-radius:3px; height:14px; }
-    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
-
-    footer { text-align: center; padding: 1.5rem; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 3rem; }
 
     @media (max-width: 680px) {
       .stat-grid { grid-template-columns: 1fr 1fr; }
-      .top-banner, nav { padding: 0 1rem; }
       .page { padding: 1.5rem 1rem; }
     }
   </style>
@@ -154,10 +85,10 @@
 
 <div class="top-banner">
   <div class="logo-row">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/VCU_Rams_logo.svg" alt="VCU" />
+    <img src="VCU_Rams_logo.svg.png" alt="VCU" />
     <div class="wordmark">
       <h1>VCU Course Registration Portal</h1>
-      <p>Instructor Dashboard</p>
+      <p>Instructor Dashboard | Summer Session 2026</p>
     </div>
   </div>
   <div class="banner-right">
@@ -225,17 +156,18 @@
   </div>
 </div>
 
-<footer>&copy; 2026 Virginia Commonwealth University &nbsp;·&nbsp; Office of the University Registrar</footer>
+<div id="footer-placeholder"></div>
+<script src="footer.js"></script>
 
 <script>
-  const API = 'http://localhost:3000';
+  const API = 'http://13.217.196.158:3000';
   let user = null;
 
   window.addEventListener('DOMContentLoaded', () => {
     const stored = localStorage.getItem('user');
-    if (!stored) { window.location.href = 'login.html'; return; }
+    if (!stored) { window.location.href = 'instructor-login.html'; return; }
     user = JSON.parse(stored);
-    if (user.role !== 'instructor') { window.location.href = 'login.html'; return; }
+    if (user.role !== 'instructor') { window.location.href = 'instructor-login.html'; return; }
 
     document.getElementById('instructorNameDisplay').textContent =
       (user.firstName || '') + ' ' + (user.lastName || '');
@@ -399,5 +331,8 @@
     window.location.href = 'login.html';
   }
 </script>
+
+<!-- ── Ram AI Chatbot ── -->
+<script src="ram-chatbot.js"></script>
 </body>
 </html>

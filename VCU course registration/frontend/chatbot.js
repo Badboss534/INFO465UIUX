@@ -21,7 +21,7 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.22);
       transition: background 0.15s, transform 0.15s;
     }
-    #vcuChat-fab:hover { background: #E8C97A; transform: scale(1.06); }
+    #vcuChat-fab:hover { background: #C9A84C; transform: scale(1.06); }
     #vcuChat-fab svg { width: 24px; height: 24px; }
 
     #vcuChat-panel {
@@ -88,7 +88,7 @@
     .chat-chips { display: flex; flex-wrap: wrap; gap: 6px; align-self: flex-start; margin-top: -4px; }
     .chat-chip {
       font-size: 12px; padding: 5px 12px; border: 1px solid #C9A84C;
-      border-radius: 999px; color: #7A6230; background: #fff;
+      border-radius: 999px; color: #C9A84C; background: #fff;
       cursor: pointer; transition: background 0.12s, color 0.12s; font-family: 'DM Sans', sans-serif;
     }
     .chat-chip:hover { background: #C9A84C; color: #0D0D0D; }

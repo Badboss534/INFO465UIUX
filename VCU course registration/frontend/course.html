@@ -7,179 +7,103 @@
   <link rel="stylesheet" href="styles.css" />
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --gold: #C9A84C; --gold-dim: #7A6230; --gold-light: #E8C97A;
-      --black: #0D0D0D; --surface: #F7F4EF; --surface-2: #EDE9E1;
-      --text: #1A1A1A; --text-muted: #6B6459; --border: rgba(0,0,0,0.10);
-      --red-accent: #9B1B30;
-    }
-    body { font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--text); min-height: 100vh; }
+    /* Wider page for the table layout */
+    .page { max-width: 1210px; }
 
-    .top-banner {
-      background: var(--black); padding: 0 2.5rem; height: 64px;
-      display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #222;
+    /* ── Search bar ── */
+    .search-area {
+      background: #fff; border: 1px solid var(--border); border-radius: 4px;
+      padding: 1.25rem 1.25rem 1rem; margin-bottom: 1.25rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     }
-    .logo-row { display: flex; align-items: center; gap: 14px; }
-    .logo-row img { height: 38px; filter: brightness(0) invert(1); }
-    .logo-row .wordmark { border-left: 1px solid #333; padding-left: 14px; }
-    .logo-row h1 { font-family: 'EB Garamond', serif; font-size: 17px; font-weight: 400; color: #fff; }
-    .logo-row p  { font-size: 11px; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 2px; }
-    .banner-right { display: flex; align-items: center; gap: 14px; }
-    .student-chip { font-size: 12px; color: #999; }
-    .student-chip strong { color: #fff; }
-    .login-hint { font-size: 12px; color: var(--gold); border: 1px solid var(--gold-dim); padding: 4px 12px; border-radius: 999px; text-decoration: none; }
-    nav { background: var(--black); border-bottom: 1px solid #1e1e1e; display: flex; padding: 0 2.5rem; }
-    nav a {
-      font-size: 13px; color: #999; text-decoration: none; padding: 12px 18px;
-      letter-spacing: 0.04em; border-bottom: 2px solid transparent; transition: color 0.15s;
-    }
-    nav a:hover { color: #fff; }
-    nav a.active { color: var(--gold); border-bottom-color: var(--gold); }
-
-    .page { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.5rem; }
-    .page-header { margin-bottom: 2rem; }
-    .page-header h2 { font-family: 'EB Garamond', serif; font-size: 30px; font-weight: 400; }
-    .page-header p  { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
-
     .search-bar {
-      display: grid; grid-template-columns: 1fr 200px 200px auto auto; gap: 10px; margin-bottom: 1.5rem;
+      display: grid; grid-template-columns: 1fr 210px 210px auto auto; gap: 10px;
     }
     .search-bar input, .search-bar select {
-      height: 40px; padding: 0 14px; border: 1px solid #DDD; border-radius: 3px;
+      height: 44px; padding: 0 14px; border: 1px solid var(--input-border); border-radius: 3px;
       font-size: 14px; font-family: 'DM Sans', sans-serif; color: var(--text);
-      background: #fff; outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+      background: var(--surface); outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+      appearance: none;
     }
     .search-bar input:focus, .search-bar select:focus {
-      border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,168,76,0.12);
+      border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-glow); background: #fff;
     }
-    .search-bar input::placeholder { color: #BBB; }
+    .search-bar input::placeholder { color: #bbb; }
     .search-btn, .reset-btn {
-      height: 40px; padding: 0 18px; border: none; border-radius: 3px;
+      height: 44px; padding: 0 22px; border: none; border-radius: 3px;
       font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
       cursor: pointer; white-space: nowrap; transition: background 0.15s;
     }
-    .search-btn { background: var(--black); color: #fff; }
+    .search-btn { background: var(--black); color: #fff; letter-spacing: 0.04em; }
     .search-btn:hover { background: #1f1f1f; }
-    .reset-btn { background: var(--surface-2); color: var(--text-muted); border: 1px solid var(--border); }
-    .reset-btn:hover { background: #ddd9d0; }
+    .reset-btn { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+    .reset-btn:hover { background: var(--surface-2); }
 
+    /* ── Stats row ── */
     .stats-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
     .result-count { font-size: 13px; color: var(--text-muted); }
     .enrolled-summary { font-size: 13px; color: var(--text-muted); }
     .enrolled-summary strong { color: var(--text); }
 
-    .table-card { background: #fff; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
-    .empty-state { padding: 3rem; text-align: center; color: var(--text-muted); font-size: 14px; }
+    /* ── Table ── */
+    .table-card { background: #fff; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
 
     table { width: 100%; border-collapse: collapse; }
     thead { background: var(--surface-2); }
     thead th {
-      padding: 10px 16px; font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
+      padding: 11px 18px; font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
       text-transform: uppercase; color: var(--text-muted); text-align: left;
       border-bottom: 1px solid var(--border);
     }
     tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: var(--surface); }
-    tbody td { padding: 12px 16px; font-size: 14px; vertical-align: middle; }
+    tbody td { padding: 13px 18px; font-size: 14px; vertical-align: middle; }
 
     .course-num { font-weight: 500; white-space: nowrap; }
-    .course-name-cell { max-width: 220px; }
+    .course-name-cell { max-width: 240px; }
     .course-name-cell .name { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .course-name-cell .sub  { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
 
-    .meta-pill { font-size: 11px; padding: 2px 9px; border-radius: 2px; font-weight: 500; white-space: nowrap; }
-    .pill-online   { background: #EAF3DE; color: #3B6D11; }
-    .pill-inperson { background: #E6F1FB; color: #0C447C; }
-    .pill-hybrid   { background: #FAEEDA; color: #633806; }
-    .pill-async    { background: #F1EFE8; color: #5F5E5A; }
-    .pill-real     { background: #FDF3F4; color: var(--red-accent); border: 1px solid #F5C1C5; }
-
     .seats-wrap { display: flex; align-items: center; gap: 8px; }
-    .seats-bar  { width: 52px; height: 4px; background: var(--surface-2); border-radius: 2px; }
-    .seats-fill { height: 100%; border-radius: 2px; background: var(--gold); }
-    .seats-fill.full { background: var(--red-accent); }
+    .seats-bar  { width: 56px; }
     .seats-text { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
 
     .action-cell { display: flex; align-items: center; gap: 6px; }
     .add-btn {
-      font-size: 12px; padding: 5px 14px; font-family: 'DM Sans', sans-serif;
-      border: 1px solid #C0DD97; border-radius: 2px; cursor: pointer;
-      color: #3B6D11; background: #EAF3DE; transition: background 0.12s; white-space: nowrap;
+      font-size: 12px; padding: 6px 14px; font-family: 'DM Sans', sans-serif;
+      border: 1px solid var(--enroll-border); border-radius: 2px; cursor: pointer;
+      color: var(--enroll-text); background: var(--enroll-bg); transition: background 0.12s; white-space: nowrap;
     }
-    .add-btn:hover { background: #C0DD97; }
+    .add-btn:hover { background: var(--enroll-border); }
     .add-btn:disabled { opacity: 0.5; cursor: default; }
     .drop-btn {
-      font-size: 12px; padding: 5px 14px; font-family: 'DM Sans', sans-serif;
-      border: 1px solid #F5C1C5; border-radius: 2px; cursor: pointer;
-      color: var(--red-accent); background: #FDF3F4; transition: background 0.12s; white-space: nowrap;
+      font-size: 12px; padding: 6px 14px; font-family: 'DM Sans', sans-serif;
+      border: 1px solid var(--error-border); border-radius: 2px; cursor: pointer;
+      color: var(--red-accent); background: var(--error-bg); transition: background 0.12s; white-space: nowrap;
     }
-    .drop-btn:hover { background: #F7C1C1; }
+    .drop-btn:hover { background: var(--error-border); }
     .drop-btn:disabled { opacity: 0.5; cursor: default; }
     .detail-btn {
-      font-size: 12px; padding: 5px 10px; font-family: 'DM Sans', sans-serif;
+      font-size: 12px; padding: 6px 12px; font-family: 'DM Sans', sans-serif;
       border: 1px solid var(--border); border-radius: 2px; cursor: pointer;
       color: var(--text-muted); background: transparent; transition: background 0.12s; white-space: nowrap;
     }
     .detail-btn:hover { background: var(--surface-2); }
 
-    .status-tag { font-size: 11px; padding: 4px 10px; border-radius: 2px; white-space: nowrap; }
-    .status-enrolled { background: #E6F1FB; color: #0C447C; }
-    .status-full     { background: var(--surface-2); color: var(--text-muted); }
-    .status-dup      { background: #FAEEDA; color: #633806; }
-    .status-guest    { background: var(--surface-2); color: var(--text-muted); font-size: 11px; font-style: italic; }
+    .status-tag { font-size: 11px; padding: 4px 10px; }
 
-    .alert {
-      display: none; padding: 11px 16px; border-radius: 3px; font-size: 13px;
-      margin-bottom: 14px; border: 1px solid transparent;
-    }
-    .alert.show { display: flex; align-items: center; gap: 10px; }
-    .alert-success { background: #EAF3DE; color: #3B6D11; border-color: #C0DD97; }
-    .alert-error   { background: #FDF3F4; color: var(--red-accent); border-color: #F5C1C5; }
-    .alert-close   { margin-left: auto; cursor: pointer; font-size: 16px; opacity: 0.6; }
-    .alert-close:hover { opacity: 1; }
-
-    .modal-bg {
-      display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.45); z-index: 100;
-      align-items: center; justify-content: center; padding: 1rem;
-    }
-    .modal-bg.open { display: flex; }
-    .modal {
-      background: #fff; border-radius: 4px; border: 1px solid var(--border);
-      width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.18);
-    }
-    .modal-header {
-      display: flex; align-items: flex-start; justify-content: space-between;
-      padding: 1.5rem 1.5rem 1rem; border-bottom: 1px solid var(--border);
-    }
-    .modal-header h3 { font-family: 'EB Garamond', serif; font-size: 22px; font-weight: 400; }
-    .modal-header .sub { font-size: 13px; color: var(--text-muted); margin-top: 3px; }
-    .modal-close {
-      background: none; border: none; font-size: 22px; cursor: pointer;
-      color: var(--text-muted); line-height: 1; padding: 0 0 0 12px; flex-shrink: 0;
-    }
-    .modal-body { padding: 1.25rem 1.5rem; }
+    .modal { max-width: 580px; }
     .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 1rem; }
     .modal-field label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 3px; }
     .modal-field span  { font-size: 14px; color: var(--text); font-weight: 500; }
     .modal-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
 
-    .skeleton {
-      background: linear-gradient(90deg, var(--surface-2) 25%, #e8e4dc 50%, var(--surface-2) 75%);
-      background-size: 200% 100%; animation: shimmer 1.2s infinite; border-radius: 3px; height: 14px;
-    }
-    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
     .skeleton-row td { padding: 16px; }
 
-    footer { text-align: center; padding: 1.5rem; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 3rem; }
-
-    @media (max-width: 860px) {
+    @media (max-width: 900px) {
       .search-bar { grid-template-columns: 1fr 1fr; }
       .search-bar input { grid-column: 1 / -1; }
-      .top-banner, nav { padding: 0 1rem; }
       thead th:nth-child(4), thead th:nth-child(5), tbody td:nth-child(4), tbody td:nth-child(5) { display: none; }
     }
   </style>
@@ -188,10 +112,10 @@
 
 <div class="top-banner">
   <div class="logo-row">
-    <img src="https://tse2.mm.bing.net/th/id/OIP.oNyCv-z0NXfS47SvTMPR8gHaCd?rs=1&pid=ImgDetMain&o=7&rm=3" alt="VCU" />
+    <img src="VCU_Rams_logo.svg.png" alt="VCU" />
     <div class="wordmark">
       <h1>VCU Course Registration Portal</h1>
-      <p>Summer Session 2026</p>
+      <p>Course Search | Summer Session 2026</p>
     </div>
   </div>
   <div class="banner-right" id="bannerRight">
@@ -209,26 +133,28 @@
 <div class="page">
   <div class="page-header">
     <h2>Course Search — Summer 2026</h2>
-    <p>Browse all available sections. Sign in to add or drop courses.</p>
+    <p>Browse all available sections. <a href="login.html" style="color:var(--gold);text-decoration:underline;text-underline-offset:2px;">Sign in to add or drop courses.</a></p>
   </div>
 
   <div id="mainAlert" class="alert"></div>
 
-  <div class="search-bar">
-    <input type="text" id="searchInput" placeholder="Search by course number, title, or instructor…"
-      onkeydown="if(event.key==='Enter') searchCourses()" />
-    <select id="deptFilter" onchange="searchCourses()">
-      <option value="">All departments</option>
-    </select>
-    <select id="modalityFilter" onchange="searchCourses()">
-      <option value="">All modalities</option>
-      <option value="Online">Online</option>
-      <option value="In-person">In-person</option>
-      <option value="Hybrid">Hybrid</option>
-      <option value="Asynchronous">Asynchronous</option>
-    </select>
-    <button class="search-btn" onclick="searchCourses()">Search</button>
-    <button class="reset-btn" onclick="resetSearch()">Reset</button>
+  <div class="search-area">
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search by course number, title, or instructor…"
+        onkeydown="if(event.key==='Enter') searchCourses()" />
+      <select id="deptFilter" onchange="searchCourses()">
+        <option value="">All departments</option>
+      </select>
+      <select id="modalityFilter" onchange="searchCourses()">
+        <option value="">All modalities</option>
+        <option value="Online">Online</option>
+        <option value="In-person">In-person</option>
+        <option value="Hybrid">Hybrid</option>
+        <option value="Asynchronous">Asynchronous</option>
+      </select>
+      <button class="search-btn" onclick="searchCourses()">Search</button>
+      <button class="reset-btn" onclick="resetSearch()">Reset</button>
+    </div>
   </div>
 
   <div class="stats-row">
@@ -286,7 +212,8 @@
   </div>
 </div>
 
-<footer>&copy; 2026 Virginia Commonwealth University &nbsp;·&nbsp; Office of the University Registrar</footer>
+<div id="footer-placeholder"></div>
+<script src="footer.js"></script>
 
 <script>
   const API = 'http://localhost:3000';
@@ -587,5 +514,8 @@
     document.getElementById('mainAlert').classList.remove('show');
   }
 </script>
+
+<!-- ── Ram AI Chatbot ── -->
+<script src="ram-chatbot.js"></script>
 </body>
 </html>
