@@ -1,6 +1,6 @@
-# VCU Course Registration Portal
+# VCU Course Registration Portal for Summer 2026
 
-A full-stack web application that allows Virginia Commonwealth University students and instructors to search, enroll in, and manage Summer 2026 course registrations — with two AI-powered chatbot assistants powered by Claude.
+Updated Web APplication that allows Virginia Commonwealth University students and instructors to search, enroll in, and manage Summer 2026 course registrations
 
 ---
 ## Team
