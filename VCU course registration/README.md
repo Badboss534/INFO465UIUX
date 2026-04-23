@@ -3,8 +3,15 @@
 A full-stack web application that allows Virginia Commonwealth University students and instructors to search, enroll in, and manage Summer 2026 course registrations — with two AI-powered chatbot assistants powered by Claude.
 
 ---
+## Team
 
+INFO 465 — UI/UX Design & Development, Spring 2026
 ## Table of Contents
+
+Tasrique - Frontend like Website UI/UX
+Viana - Backend like Database and Chatbox AI
+Omer - 
+Christian - 
 
 - [Overview](#overview)
 - [Tech Stack](#tech-stack)
@@ -84,7 +91,7 @@ INFO465UIUX/
 
 ## Frontend Pages
 
-All pages are static HTML served from the `frontend/` directory with shared CSS and a dynamically injected footer.
+All pages are static HTML served from the `frontend/` directory with shared CSS.
 
 | File | Purpose |
 |---|---|
@@ -268,7 +275,3 @@ Defined in `.gitlab-ci.yml` with three jobs:
 | `secret_detection` | GitLab SAST | Scans for accidentally committed secrets or credentials |
 
 ---
-
-## Team
-
-INFO 465 — UI/UX Design & Development, Spring 2026
