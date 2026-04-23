@@ -6,12 +6,13 @@ A full-stack web application that allows Virginia Commonwealth University studen
 ## Team
 
 INFO 465 — UI/UX Design & Development, Spring 2026
-## Table of Contents
 
-Tasrique - Frontend like Website UI/UX
-Viana - Backend like Database and Chatbox AI
-Omer - 
-Christian - 
+- Tasrique - Frontend like Website UI/UX
+- Viana - Backend like Database and Chatbox AI
+- Omer - 
+- Christian - 
+
+## Table of Contents
 
 - [Overview](#overview)
 - [Tech Stack](#tech-stack)
